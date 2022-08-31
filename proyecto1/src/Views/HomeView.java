@@ -1,11 +1,22 @@
 package Views;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 public class HomeView extends JFrame{
     public JTextArea newArea;
     public JLabel erroresGenerados;
     public JScrollPane paneScrol;
+    public JMenuItem openFile;
+    public JButton clean;
+    public JMenuItem saveAs;
     public HomeView(){
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(null);
@@ -26,11 +37,14 @@ public class HomeView extends JFrame{
         Report.setForeground(Color.WHITE);
         View.setForeground(Color.WHITE);
         // menu items file
-        JMenuItem openFile = new JMenuItem("Open File");
+        openFile = new JMenuItem("Open File");
         openFile.setBackground(new Color(66, 73, 73 ));
         openFile.setForeground(Color.WHITE);
-        JMenuItem saveAs = new JMenuItem("Save As");
+        openFile.addActionListener(this::actionPerformed);
+
+        saveAs = new JMenuItem("Save As");
         saveAs.setBackground(new Color(66, 73, 73 ));
+        saveAs.addActionListener(this::actionPerformed);
         saveAs.setForeground(Color.WHITE);
         File.add(openFile);
         File.add(saveAs);
@@ -59,9 +73,10 @@ public class HomeView extends JFrame{
         newMenu.setBounds(10,12,125,25);
 
         //Buttons area
-        JButton clean = new JButton("Clean");
+        clean = new JButton("Clean");
         clean.setBounds(425,75,65,25);
         clean.setBackground(new Color(127, 179, 213));
+        clean.addActionListener(this::actionPerformed);
         clean.setForeground(Color.WHITE);
 
         JButton run = new JButton("Run");
@@ -107,4 +122,59 @@ public class HomeView extends JFrame{
         this.setSize(650,800);
         this.getContentPane().setBackground(new Color(66, 73, 73 ));
     }
+    public void actionPerformed(ActionEvent e){
+        if(e.getSource() == openFile){
+            JFileChooser file = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Document OLC","olc");
+            file.setFileFilter(filter);
+            int returnVal = file.showOpenDialog(this);
+            if(returnVal == JFileChooser.APPROVE_OPTION){
+                String ruteFile = file.getSelectedFile().toString();
+                try{
+                    File newFile = new File(ruteFile);
+                    Scanner myReader = new Scanner(newFile);
+                    String data ="";
+                    while (myReader.hasNextLine()){
+                        data += myReader.nextLine() +"\n";
+                    }
+                    newArea.setText(data);
+                }catch (FileNotFoundException err){
+                    System.out.println("An error occurred.");
+                    err.printStackTrace();
+                }
+
+            }
+
+        }else if (e.getSource() == clean){
+            newArea.setText("");
+        } else if (e.getSource() == saveAs) {
+            String dataPanel = newArea.getText();
+            String name=JOptionPane.showInputDialog(this,"Ingrese el Nombre para el archivo");
+            if (name!= null){
+                JOptionPane.showMessageDialog(this,"Nombre Obligatorio");
+            }else {
+                this.saveDocument(name,dataPanel);
+            }
+        }
+    }
+    public void saveDocument(String name,String dataResult){
+        try {
+            File newDocument = new File(name);
+            if(newDocument.createNewFile()){
+                FileWriter writerDocument = new FileWriter(name);
+                writerDocument.write(dataResult);
+                writerDocument.close();
+            }else {
+                System.out.println("existe File");
+                FileWriter writerDocument = new FileWriter(name);
+                writerDocument.write(dataResult);
+                writerDocument.close();
+            }
+        }catch (IOException err){
+            System.out.println("An error occurred.");
+            err.printStackTrace();
+        }
+    }
+
 }
