@@ -1,0 +1,78 @@
+package Analizadores;
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+
+%{
+    System.out.println("Que onda como les va");
+}%
+terminal punto;
+terminal igual;
+terminal suma;
+terminal menos;
+terminal por;
+terminal entre;
+terminal para;
+terminal parc;
+terminal mayor;
+terminal menor;
+terminal inta;
+terminal intc;
+terminal coma;
+terminal potencia;
+terminal mod;
+terminal inicio;
+terminal fin;
+terminal ingresar;
+terminal como;
+terminal cValor;
+terminal si;
+terminal entonces;
+terminal dlContrario;
+terminal fSi;
+terminal oSi;
+terminal segun;
+terminal fSegun;
+terminal parar;
+terminal hasta;
+terminal fpara;
+terminal con;
+terminal incremental;
+terminal mientras;
+terminal fMientras;
+terminal fMientras;
+terminal repetir;
+terminal hQue;
+terminal retornar;
+terminal metodo;
+terminal fMetodo;
+terminal cParametros;
+terminal funcion;
+terminal fFuncion;
+terminal ejecutar;
+terminal imprimir;
+terminal iLn;
+terminal mayorQue;
+terminal menorQue;
+terminal maOIQue;
+terminal meOIQue;
+terminal eIgual;
+terminal eDiferente;
+terminal or;
+terminal and;
+terminal not;
+terminal numero;
+terminal cadena;
+terminal caracter;
+terminal comentario;
+terminal varNombre;
+terminal booleanR;
+
+non terminal INICIO, E;
+start with INICIO;
+
+INICIO ::= inicio E fin;
+
+E::= E suma numero
+    | numero
+    ;
+
