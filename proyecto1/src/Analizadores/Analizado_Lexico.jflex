@@ -18,6 +18,9 @@ import java.util.LinkedList;
 
 numeroDecimal =  (\d+\s*\n*\t*\.\s*\n*\t*\d+\s*\n*\t*)
 numeroEntero = (\d+\s*\n*\t*)
+cadena = \".*?\"
+caracter = (\'.*?\')|(\'$\{.*?\}')
+comentario = \\\*\n*\s*\t*(.*?)\n*\s*\t*\*\\
 %%
 
 
@@ -64,7 +67,35 @@ numeroEntero = (\d+\s*\n*\t*)
                      System.out.println("Reconocio token:parentesisCierra lexema:"+yytext());
                      return new Symbol(Simbolos.parC,yycolumn,yyline,yytext());
                      }
-
+/*------------ TIPO relacional -----------*/
+<YYINITIAL>"mayor" {
+                    return new Symbol(Simbolos.mayorQue,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>"menor" {
+                    return new Symbol(Simbolos.menorQue,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>"mayor o igual que" {
+                    return new Symbol(Simbolos.mayorOIgual,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>"menor o igual que" {
+                    return new Symbol(Simbolos.menorOIgual,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>"igual" {
+                    return new Symbol(Simbolos.igualLogico,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>"diferente" {
+                    return new Symbol(Simbolos.diferente,yycolumn,yyline,yytext());
+                    }
+/*------------ Tipo Logica ------------*/
+<YYINITIAL>"or" {
+                    return new Symbol(Simbolos.or,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>"and" {
+                    return new Symbol(Simbolos.and,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>"not" {
+                    return new Symbol(Simbolos.not,yycolumn,yyline,yytext());
+                    }
 /*------------ Tipos de datos ---------*/
 
 <YYINITIAL>{numeroDecimal} {
@@ -75,6 +106,15 @@ numeroEntero = (\d+\s*\n*\t*)
                      System.out.println("Reconocio token:Numero lexema:"+yytext());
                      return new Symbol(Simbolos.numero,yycolumn,yyline,yytext());
                      }
+<YYINITIAL>{cadena} {
+                    return new Symbol(Simbolos.cadena,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>{caracter} {
+                    return new Symbol(Simbolos.caracter,yycolumn,yyline,yytext());
+                    }
+<YYINITIAL>{comentario} {
+                    return new Symbol(Simbolos.comentario,yycolumn,yyline,yytext());
+                    }
 
 [ \t\r\n\f] {}
 

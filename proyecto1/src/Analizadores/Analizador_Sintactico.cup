@@ -22,14 +22,18 @@ parser code
 terminal inicio,fin;
 terminal String numero;
 terminal mas,menos,por,division,potencia,mod,parA,parC;
+terminal mayorQue,menorQue,mayorOIgual,menorOIgual,igualLogico,or,and,not,diferente;
+terminal caracter,cadena,comentario;
 
 
 // no terminales
-non terminal INICIO,ENUMERICA;
+non terminal INICIO,ENUMERICA,INSTRUCCION,EXPRESIONLOGICA, EXPRESIONRELACIONAL;
 //precedencias gerarquicas
 precedence left mas,menos;
 precedence left division,por;
 precedence left potencia,mod;
+
+precedence right not;
 // gramaticas
 start with INICIO;
 
@@ -45,3 +49,21 @@ ENUMERICA::= ENUMERICA mas ENUMERICA
     |parA ENUMERICA parC
     | numero
 ;
+EXPRESIONRELACIONAL::= ENUMERICA mayorQue ENUMERICA
+    |ENUMERICA menorQue ENUMERICA
+    |ENUMERICA mayorOIgual ENUMERICA
+    |ENUMERICA menorOIgual ENUMERICA
+    |ENUMERICA igualLogico ENUMERICA
+    |cadena igualLogico cadena
+    |caracter igualLogico caracter
+    |ENUMERICA diferente ENUMERICA
+    |caracter diferente caracter
+    |cadena diferente cadena
+    |parA EXPRESIONRELACIONAL parC
+    |error
+;
+EXPRESIONLOGICA::= EXPRESIONRELACIONAL or EXPRESIONRELACIONAL
+    |EXPRESIONRELACIONAL and EXPRESIONRELACIONAL
+    |not EXPRESIONRELACIONAL
+    |EXPRESIONRELACIONAL
+    ;
