@@ -1,0 +1,47 @@
+package Analizadores;
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+// codigo de java.
+parser code
+{:
+    // varible que guarda los tokens correctos
+    public LinkedList<Instruccion> ListaTokens;
+    public LinkedList<TError> ListaErresSintacticos;
+
+    public void add_Token(String name, String Lexema){
+        ListaTokens.add(new Instruccion(name,Lexema));
+    }
+    public void syntax_error(Symbol s){
+                System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+".");
+        }
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido.");
+    }
+:}
+// definicion de terminales
+terminal inicio,fin;
+terminal String numero;
+terminal mas,menos,por,division,potencia,mod,parA,parC;
+
+
+// no terminales
+non terminal INICIO,ENUMERICA;
+//precedencias gerarquicas
+precedence left mas,menos;
+precedence left division,por;
+precedence left potencia,mod;
+// gramaticas
+start with INICIO;
+
+INICIO::=inicio ENUMERICA fin;
+
+// operaciones aritmeticas
+ENUMERICA::= ENUMERICA mas ENUMERICA
+    |ENUMERICA menos ENUMERICA
+    |ENUMERICA por ENUMERICA
+    |ENUMERICA division ENUMERICA
+    |ENUMERICA potencia ENUMERICA
+    |ENUMERICA mod ENUMERICA
+    |parA ENUMERICA parC
+    | numero
+;

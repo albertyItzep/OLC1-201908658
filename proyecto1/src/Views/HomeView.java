@@ -1,5 +1,7 @@
 package Views;
 
+import Controler.Controler;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -17,7 +19,10 @@ public class HomeView extends JFrame{
     public JMenuItem openFile;
     public JButton clean;
     public JMenuItem saveAs;
+    public JButton run;
+    public Controler controlador;
     public HomeView(){
+        controlador = new Controler();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setTitle("Projecto 1 OLC1");
@@ -79,9 +84,10 @@ public class HomeView extends JFrame{
         clean.addActionListener(this::actionPerformed);
         clean.setForeground(Color.WHITE);
 
-        JButton run = new JButton("Run");
+        run = new JButton("Run");
         run.setBackground(new Color(88, 214, 141  ));
         run.setForeground(Color.WHITE);
+        run.addActionListener(this::actionPerformed);
         run.setBounds(500,75,65,25);
 
         // text area
@@ -138,14 +144,13 @@ public class HomeView extends JFrame{
                     while (myReader.hasNextLine()){
                         data += myReader.nextLine() +"\n";
                     }
-                    newArea.setText(data);
+                    newArea.setText(data);//controlador.generateCompiling(data);
                 }catch (FileNotFoundException err){
                     System.out.println("An error occurred.");
                     err.printStackTrace();
                 }
 
             }
-
         }else if (e.getSource() == clean){
             newArea.setText("");
         } else if (e.getSource() == saveAs) {
@@ -156,6 +161,9 @@ public class HomeView extends JFrame{
             }else {
                 this.saveDocument(name,dataPanel);
             }
+        } else if (e.getSource()==run) {
+            String data =newArea.getText();
+            controlador.generateCompiling(data);
         }
     }
     public void saveDocument(String name,String dataResult){
