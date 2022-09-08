@@ -19,7 +19,7 @@ import java.util.LinkedList;
 numeroDecimal =  (\d+\s*\n*\t*\.\s*\n*\t*\d+\s*\n*\t*)
 numeroEntero = (\d+\s*\n*\t*)
 cadena = \".*?\"
-caracter = (\'.*?\')|(\'$\{.*?\}')
+caracter = (\'.*?\')|(\'\$\{.*?\}')
 comentario = \\\*\n*\s*\t*(.*?)\n*\s*\t*\*\\
 %%
 
@@ -33,7 +33,37 @@ comentario = \\\*\n*\s*\t*(.*?)\n*\s*\t*\*\\
                      System.out.println("Reconocio token:fin lexema:"+yytext());
                      return new Symbol(Simbolos.fin,yycolumn,yyline,yytext());
                      }
+/*------------ Declaracion para if -------------*/
+<YYINITIAL>"si" {
+                System.out.println("Reconocio token:si:"+yytext());
+                return new Symbol(Simbolos.si,yycolumn,yyline,yytext());
+             }
+<YYINITIAL>"o_si" {
+                System.out.println("Reconocio token:o_si:"+yytext());
+                return new Symbol(Simbolos.o_si,yycolumn,yyline,yytext());
+             }
+<YYINITIAL>"de_lo_contrario" {
+                System.out.println("Reconocio token:de lo contrario:"+yytext());
+                return new Symbol(Simbolos.de_lo_contrario,yycolumn,yyline,yytext());
+             }
+<YYINITIAL>"fin_si" {
+                System.out.println("Reconocio token:fin_si:"+yytext());
+                return new Symbol(Simbolos.fi_si,yycolumn,yyline,yytext());
+             }
 
+/*------------ Declaracion para Mientras -------*/
+<YYINITIAL>"mientras" {
+                     System.out.println("Reconocio token:mientras:" + yytext());
+                     return new Symbol(Simbolos.mientras,yycolumn,yyline,yytext());
+                     }
+<YYINITIAL>"hacer" {
+                     System.out.println("Reconocio token:hacer:" + yytext());
+                     return new Symbol(Simbolos.hacer,yycolumn,yyline,yytext());
+                     }
+<YYINITIAL>"fin_mientras" {
+                     System.out.println("Reconocio token:fin_mientras:"+yytext());
+                     return new Symbol(Simbolos.fmientras,yycolumn,yyline,yytext());
+                     }
 /*------------ Operaciones Aritmeticas ---------*/
 <YYINITIAL>"+" {
                      System.out.println("Reconocio token:mas lexema:"+yytext());
@@ -69,33 +99,44 @@ comentario = \\\*\n*\s*\t*(.*?)\n*\s*\t*\*\\
                      }
 /*------------ TIPO relacional -----------*/
 <YYINITIAL>"mayor" {
+                    System.out.println("Reconocio token:mayor lexema:"+yytext());
                     return new Symbol(Simbolos.mayorQue,yycolumn,yyline,yytext());
                     }
 <YYINITIAL>"menor" {
+                    System.out.println("Reconocio token:menor lexema:"+yytext());
                     return new Symbol(Simbolos.menorQue,yycolumn,yyline,yytext());
                     }
-<YYINITIAL>"mayor o igual que" {
+<YYINITIAL>"mayor_o_igual" {
+                    System.out.println("Reconocio token:mayorOIgual lexema:"+yytext());
                     return new Symbol(Simbolos.mayorOIgual,yycolumn,yyline,yytext());
                     }
-<YYINITIAL>"menor o igual que" {
+<YYINITIAL>"menor_o_igual" {
+                    System.out.println("Reconocio token:menorOIgual lexema:"+yytext());
                     return new Symbol(Simbolos.menorOIgual,yycolumn,yyline,yytext());
                     }
-<YYINITIAL>"igual" {
+<YYINITIAL>"es_igual" {
+                    System.out.println("Reconocio token:igual lexema:"+yytext());
                     return new Symbol(Simbolos.igualLogico,yycolumn,yyline,yytext());
                     }
-<YYINITIAL>"diferente" {
+<YYINITIAL>"es_diferente" {
+                    System.out.println("Reconocio token:diferente lexema:"+yytext());
                     return new Symbol(Simbolos.diferente,yycolumn,yyline,yytext());
                     }
+
 /*------------ Tipo Logica ------------*/
 <YYINITIAL>"or" {
+                    System.out.println("Reconocio token:or lexema:"+yytext());
                     return new Symbol(Simbolos.or,yycolumn,yyline,yytext());
                     }
 <YYINITIAL>"and" {
+                    System.out.println("Reconocio token:and lexema:"+yytext());
                     return new Symbol(Simbolos.and,yycolumn,yyline,yytext());
                     }
 <YYINITIAL>"not" {
+                    System.out.println("Reconocio token:not lexema:"+yytext());
                     return new Symbol(Simbolos.not,yycolumn,yyline,yytext());
                     }
+
 /*------------ Tipos de datos ---------*/
 
 <YYINITIAL>{numeroDecimal} {

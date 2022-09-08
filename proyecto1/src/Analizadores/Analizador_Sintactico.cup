@@ -24,10 +24,11 @@ terminal String numero;
 terminal mas,menos,por,division,potencia,mod,parA,parC;
 terminal mayorQue,menorQue,mayorOIgual,menorOIgual,igualLogico,or,and,not,diferente;
 terminal caracter,cadena,comentario;
-
-
+terminal mientras,hacer,fmientras;
+terminal si,o_si,de_lo_contrario,fi_si;
 // no terminales
-non terminal INICIO,ENUMERICA,INSTRUCCION,EXPRESIONLOGICA, EXPRESIONRELACIONAL;
+non terminal OSI;
+non terminal INICIO,ENUMERICA,INSTRUCCION,EXPRESIONLOGICA, EXPRESIONRELACIONAL,INSTRUCCIONES,INI;
 //precedencias gerarquicas
 precedence left mas,menos;
 precedence left division,por;
@@ -37,8 +38,8 @@ precedence right not;
 // gramaticas
 start with INICIO;
 
-INICIO::=inicio ENUMERICA fin;
-
+INICIO::=inicio INI fin;
+INI::= INSTRUCCIONES;
 // operaciones aritmeticas
 ENUMERICA::= ENUMERICA mas ENUMERICA
     |ENUMERICA menos ENUMERICA
@@ -67,3 +68,15 @@ EXPRESIONLOGICA::= EXPRESIONRELACIONAL or EXPRESIONRELACIONAL
     |not EXPRESIONRELACIONAL
     |EXPRESIONRELACIONAL
     ;
+INSTRUCCIONES::=
+    INSTRUCCIONES INSTRUCCION
+    |INSTRUCCION
+    ;
+INSTRUCCION::= mientras EXPRESIONLOGICA hacer INSTRUCCIONES fmientras
+    |si EXPRESIONLOGICA INSTRUCCION fi_si
+    |si EXPRESIONLOGICA INSTRUCCION de_lo_contrario INSTRUCCIONES fi_si
+    |si EXPRESIONLOGICA INSTRUCCION OSI fi_si
+    |si EXPRESIONLOGICA INSTRUCCION OSI de_lo_contrario INSTRUCCIONES fi_si
+    |ENUMERICA;
+OSI::= OSI o_si EXPRESIONLOGICA INSTRUCCIONES
+    | o_si EXPRESIONLOGICA INSTRUCCIONES;
