@@ -1,3 +1,16 @@
 inicio
 15.2 + 12 + 20 + 150 + 30
+si 3 es_igual 3
+5*6341
+o_si 4 es_diferente 3
+5*4
+o_si 5 es_diferente 5
+5*5
+o_si 6 es_diferente 6
+5*6
+o_si 7 es_diferente 7
+5*7
+de_lo_contrario
+5*2
+fin_si
 fin

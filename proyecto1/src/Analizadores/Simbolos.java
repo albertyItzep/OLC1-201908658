@@ -8,44 +8,79 @@ package Analizadores;
 /** CUP generated class containing symbol constants. */
 public class Simbolos {
   /* terminals */
-  public static final int fi_si = 31;
-  public static final int cadena = 23;
-  public static final int not = 20;
-  public static final int numero = 4;
-  public static final int mayorOIgual = 15;
-  public static final int mientras = 25;
-  public static final int por = 7;
-  public static final int fmientras = 27;
-  public static final int hacer = 26;
-  public static final int or = 18;
-  public static final int caracter = 22;
-  public static final int menos = 6;
-  public static final int igualLogico = 17;
+  public static final int mayorOIgual = 20;
+  public static final int mayorQue = 18;
+  public static final int como = 43;
+  public static final int imprimir = 61;
+  public static final int con_parametros = 57;
+  public static final int mod = 13;
+  public static final int booleanR = 5;
+  public static final int con = 51;
+  public static final int menorOIgual = 21;
+  public static final int hasta = 49;
+  public static final int hasta_que = 54;
+  public static final int coma = 7;
+  public static final int entonces = 37;
+  public static final int asignarValor = 47;
+  public static final int ptcoma = 46;
+  public static final int fin_funcion = 60;
   public static final int inicio = 2;
+  public static final int caracter = 27;
+  public static final int repetir = 53;
+  public static final int inteC = 40;
+  public static final int variables = 45;
+  public static final int fin_metodo = 58;
+  public static final int inteA = 39;
+  public static final int menorQue = 19;
+  public static final int si = 33;
+  public static final int mientras = 30;
+  public static final int numero = 4;
+  public static final int igualLogico = 22;
+  public static final int tipoDato = 6;
+  public static final int menos = 9;
   public static final int EOF = 0;
-  public static final int division = 8;
-  public static final int menorOIgual = 16;
-  public static final int potencia = 9;
+  public static final int mas = 8;
+  public static final int para = 48;
   public static final int error = 1;
-  public static final int parC = 12;
-  public static final int comentario = 24;
-  public static final int parA = 11;
+  public static final int fi_si = 36;
+  public static final int metodo = 56;
+  public static final int or = 23;
+  public static final int incremental = 52;
+  public static final int fpara = 50;
+  public static final int por = 10;
+  public static final int funcion = 59;
+  public static final int imprimir_nl = 62;
+  public static final int potencia = 12;
+  public static final int fin_segun = 41;
+  public static final int segun = 38;
+  public static final int hacer = 31;
+  public static final int ingresar = 42;
+  public static final int con_valor = 44;
   public static final int fin = 3;
-  public static final int diferente = 21;
-  public static final int mas = 5;
-  public static final int menorQue = 14;
-  public static final int si = 28;
-  public static final int mod = 10;
-  public static final int and = 19;
-  public static final int de_lo_contrario = 30;
-  public static final int o_si = 29;
-  public static final int mayorQue = 13;
+  public static final int diferente = 26;
+  public static final int de_lo_contrario = 35;
+  public static final int and = 24;
+  public static final int not = 25;
+  public static final int fmientras = 32;
+  public static final int parC = 15;
+  public static final int comentario = 29;
+  public static final int retornar = 55;
+  public static final int parA = 14;
+  public static final int corC = 17;
+  public static final int corA = 16;
+  public static final int o_si = 34;
+  public static final int division = 11;
+  public static final int ejecutar = 63;
+  public static final int cadena = 28;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "inicio",
   "fin",
   "numero",
+  "booleanR",
+  "tipoDato",
+  "coma",
   "mas",
   "menos",
   "por",
@@ -54,6 +89,8 @@ public class Simbolos {
   "mod",
   "parA",
   "parC",
+  "corA",
+  "corC",
   "mayorQue",
   "menorQue",
   "mayorOIgual",
@@ -72,7 +109,34 @@ public class Simbolos {
   "si",
   "o_si",
   "de_lo_contrario",
-  "fi_si"
+  "fi_si",
+  "entonces",
+  "segun",
+  "inteA",
+  "inteC",
+  "fin_segun",
+  "ingresar",
+  "como",
+  "con_valor",
+  "variables",
+  "ptcoma",
+  "asignarValor",
+  "para",
+  "hasta",
+  "fpara",
+  "con",
+  "incremental",
+  "repetir",
+  "hasta_que",
+  "retornar",
+  "metodo",
+  "con_parametros",
+  "fin_metodo",
+  "funcion",
+  "fin_funcion",
+  "imprimir",
+  "imprimir_nl",
+  "ejecutar"
   };
 }
 

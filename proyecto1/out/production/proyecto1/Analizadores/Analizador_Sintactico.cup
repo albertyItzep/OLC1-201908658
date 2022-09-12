@@ -20,21 +20,32 @@ parser code
 :}
 // definicion de terminales
 terminal inicio,fin;
-terminal String numero;
-terminal mas,menos,por,division,potencia,mod,parA,parC;
-
-
+terminal String numero,booleanR,tipoDato,coma;
+terminal mas,menos,por,division,potencia,mod,parA,parC,corA,corC;
+terminal mayorQue,menorQue,mayorOIgual,menorOIgual,igualLogico,or,and,not,diferente;
+terminal caracter,cadena,comentario;
+terminal mientras,hacer,fmientras;
+terminal si,o_si,de_lo_contrario,fi_si,entonces,segun,inteA,inteC,fin_segun;
+terminal ingresar,como,con_valor,variables,ptcoma,asignarValor;
+terminal para,hasta,fpara,con,incremental;
+terminal repetir,hasta_que,retornar;
+terminal metodo,con_parametros,fin_metodo,funcion,fin_funcion;
+terminal imprimir,imprimir_nl,ejecutar;
 // no terminales
-non terminal INICIO,ENUMERICA;
+non terminal OSI,VARNAME;
+non terminal INICIO,ASIGNACION,ASIGNACIONOTRAS,DECLARACION,ENUMERICA,INSTRUCCION,EXPRESIONLOGICA, EXPRESIONRELACIONAL,INSTRUCCIONES,INI;
+non terminal SEGUNOP , VARNAMEMF,EJECUCIONV,IMPRIMIRV;
 //precedencias gerarquicas
 precedence left mas,menos;
 precedence left division,por;
 precedence left potencia,mod;
+
+precedence right not;
 // gramaticas
 start with INICIO;
 
-INICIO::=inicio ENUMERICA fin;
-
+INICIO::=inicio INI fin;
+INI::= INSTRUCCIONES;
 // operaciones aritmeticas
 ENUMERICA::= ENUMERICA mas ENUMERICA
     |ENUMERICA menos ENUMERICA
@@ -43,5 +54,118 @@ ENUMERICA::= ENUMERICA mas ENUMERICA
     |ENUMERICA potencia ENUMERICA
     |ENUMERICA mod ENUMERICA
     |parA ENUMERICA parC
-    | numero
+    |corA ENUMERICA corC
+    |menos ENUMERICA
+    |numero
+    |variables
 ;
+EXPRESIONRELACIONAL::= ENUMERICA mayorQue ENUMERICA
+    |ENUMERICA menorQue ENUMERICA
+    |ENUMERICA mayorOIgual ENUMERICA
+    |ENUMERICA menorOIgual ENUMERICA
+    |ENUMERICA igualLogico ENUMERICA
+    |cadena igualLogico cadena
+    |caracter igualLogico caracter
+    |ENUMERICA diferente ENUMERICA
+    |caracter diferente caracter
+    |cadena diferente cadena
+    |parA EXPRESIONRELACIONAL parC
+    |error
+;
+ASIGNACION::=
+    VARNAME asignarValor ENUMERICA ptcoma
+;
+ASIGNACIONOTRAS::=
+    VARNAME asignarValor ENUMERICA
+;
+DECLARACION::=ingresar VARNAME como tipoDato con_valor ENUMERICA ptcoma
+    |ingresar VARNAME como tipoDato con_valor cadena ptcoma
+    |ingresar VARNAME como tipoDato con_valor caracter ptcoma
+    |ingresar VARNAME como tipoDato con_valor booleanR ptcoma
+    |ingresar VARNAME como tipoDato con_valor EXPRESIONRELACIONAL ptcoma
+    ;
+VARNAME::= variables
+    |VARNAME coma variables
+    ;
+VARNAMEMF::= variables tipoDato
+    | VARNAMEMF coma variables tipoDato
+    ;
+EXPRESIONLOGICA::= EXPRESIONRELACIONAL or EXPRESIONRELACIONAL
+    |EXPRESIONRELACIONAL and EXPRESIONRELACIONAL
+    |not EXPRESIONRELACIONAL
+    |EXPRESIONRELACIONAL
+    ;
+INSTRUCCIONES::=
+    INSTRUCCIONES INSTRUCCION
+    |INSTRUCCION
+    ;
+EJECUCIONV::=ENUMERICA
+    |EJECUCIONV coma ENUMERICA
+    |cadena
+    |EJECUCIONV coma cadena
+    |caracter
+    |EJECUCIONV coma caracter
+    |EXPRESIONRELACIONAL
+    |EJECUCIONV coma EXPRESIONRELACIONAL
+    |booleanR
+    |EJECUCIONV coma booleanR
+;
+IMPRIMIRV::= imprimir cadena ptcoma
+    |imprimir caracter ptcoma
+    |imprimir ejecutar variables parA parC ptcoma
+    |imprimir ejecutar variables parA EJECUCIONV parC ptcoma
+    |imprimir ENUMERICA ptcoma
+    |imprimir EXPRESIONRELACIONAL ptcoma
+    |imprimir parA cadena parC ptcoma
+    |imprimir parA caracter parC ptcoma
+    |imprimir parA ejecutar variables parA parC parC ptcoma
+    |imprimir parA ejecutar variables parA EJECUCIONV parC parC ptcoma
+    |imprimir_nl cadena ptcoma
+    |imprimir_nl caracter ptcoma
+    |imprimir_nl ejecutar variables parA parC ptcoma
+    |imprimir_nl ejecutar variables parA EJECUCIONV parC ptcoma
+    |imprimir_nl ENUMERICA ptcoma
+    |imprimir_nl EXPRESIONRELACIONAL ptcoma
+    |imprimir_nl parA cadena parC ptcoma
+    |imprimir_nl parA caracter parC ptcoma
+    |imprimir_nl parA ejecutar variables parA parC parC ptcoma
+    |imprimir_nl parA ejecutar variables parA EJECUCIONV parC parC ptcoma
+;
+INSTRUCCION::= mientras EXPRESIONLOGICA hacer INSTRUCCIONES fmientras
+    |mientras EXPRESIONLOGICA hacer fmientras
+    |si EXPRESIONLOGICA entonces INSTRUCCION fi_si
+    |si EXPRESIONLOGICA entonces INSTRUCCION de_lo_contrario INSTRUCCIONES fi_si
+    |si EXPRESIONLOGICA entonces INSTRUCCION OSI fi_si
+    |si EXPRESIONLOGICA entonces INSTRUCCION OSI de_lo_contrario INSTRUCCIONES fi_si
+    |para ASIGNACIONOTRAS hasta ENUMERICA hacer INSTRUCCIONES fpara
+    |para ASIGNACIONOTRAS hasta ENUMERICA    con incremental ENUMERICA hacer INSTRUCCIONES fpara
+    |para ASIGNACIONOTRAS hasta ENUMERICA hacer fpara
+    |para ASIGNACIONOTRAS hasta ENUMERICA    con incremental ENUMERICA hacer fpara
+    |repetir INSTRUCCIONES hasta_que EXPRESIONLOGICA
+    |repetir hasta_que EXPRESIONLOGICA
+    |segun ENUMERICA hacer SEGUNOP de_lo_contrario entonces INSTRUCCIONES fin_segun
+    |metodo variables INSTRUCCIONES fin_metodo
+    |metodo variables con_parametros parA VARNAMEMF parC INSTRUCCIONES fin_metodo
+    |funcion variables tipoDato INSTRUCCIONES fin_funcion
+    |funcion variables tipoDato retornar ENUMERICA ptcoma fin_funcion
+    |funcion variables tipoDato retornar EXPRESIONLOGICA ptcoma fin_funcion
+    |funcion variables tipoDato INSTRUCCIONES retornar ENUMERICA ptcoma fin_funcion
+    |funcion variables tipoDato INSTRUCCIONES retornar EXPRESIONLOGICA ptcoma fin_funcion
+    |funcion variables tipoDato con_parametros parA VARNAMEMF parC INSTRUCCIONES fin_funcion
+    |funcion variables tipoDato con_parametros parA VARNAMEMF parC retornar ENUMERICA ptcoma fin_funcion
+    |funcion variables tipoDato con_parametros parA VARNAMEMF parC retornar EXPRESIONRELACIONAL ptcoma fin
+    |funcion variables tipoDato con_parametros parA VARNAMEMF parC INSTRUCCIONES retornar ENUMERICA ptcoma fin_funcion
+    |funcion variables tipoDato con_parametros parA VARNAMEMF parC INSTRUCCIONES retornar EXPRESIONRELACIONAL ptcoma fin_funcion
+    |ejecutar variables parA parC ptcoma
+    |ejecutar variables parA EJECUCIONV parC ptcoma
+    |comentario
+    |DECLARACION
+    |ENUMERICA
+    |ASIGNACION
+    |IMPRIMIRV
+    ;
+SEGUNOP::= SEGUNOP inteA ENUMERICA inteC entonces INSTRUCCIONES
+    |inteA ENUMERICA inteC entonces INSTRUCCIONES
+;
+OSI::= OSI o_si EXPRESIONLOGICA entonces INSTRUCCIONES
+    | o_si EXPRESIONLOGICA entonces INSTRUCCIONES;
