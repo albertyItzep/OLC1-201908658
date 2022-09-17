@@ -1,8 +1,8 @@
 package Analizadores;
 
 public class TError {
-    String lexema, tipo, descripcion;
-    int linea, columna;
+    public String lexema, tipo, descripcion;
+    public int linea, columna;
 
     public TError(String lex, int lin, int col, String tipo, String desc){
         this.lexema=lex;
@@ -13,5 +13,8 @@ public class TError {
     }
     public String get(){
         return "[ "+this.lexema+ " , "+this.tipo+" , "+this.descripcion+" ]";
+    }
+    public int getLinea(){
+        return this.linea;
     }
 }

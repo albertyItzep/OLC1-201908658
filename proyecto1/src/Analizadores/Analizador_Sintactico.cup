@@ -1,151 +1,159 @@
 package Analizadores;
-import java_cup.runtime.Symbol;
+import java_cup.runtime.*;
 import java.util.LinkedList;
+import AcccionesGramaticales.Declaraciones;
 // codigo de java.
 parser code
 {:
     // varible que guarda los tokens correctos
-    public LinkedList<Instruccion> ListaTokens;
-    public LinkedList<TError> ListaErresSintacticos;
-
-    public void add_Token(String name, String Lexema){
-        ListaTokens.add(new Instruccion(name,Lexema));
-    }
+    public LinkedList<TError> ListaErresSintacticos = new LinkedList<TError>();
+    public LinkedList<Object> AST;
+    public Declaraciones listaTokens = new Declaraciones();
     public void syntax_error(Symbol s){
-                System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+".");
+                TError error = new TError(String.valueOf(s.value),s.right,s.left,"Sintactico","Token inesperado");
+                ListaErresSintacticos.add(error);
         }
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
-        System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido.");
+                TError error = new TError(String.valueOf(s.value),s.right,s.left,"Sintactico","Token inesperado");
+                ListaErresSintacticos.add(error);
+    }
+    public LinkedList<Object> getAST(){
+        return AST;
     }
 :}
+action code{:
+String NumeroIngresado="";
+:}
 // definicion de terminales
-terminal inicio,fin;
+terminal String inicio,fin;
 terminal String numero,booleanR,tipoDato,coma;
-terminal mas,menos,por,division,potencia,mod,parA,parC,corA,corC;
-terminal mayorQue,menorQue,mayorOIgual,menorOIgual,igualLogico,or,and,not,diferente;
-terminal caracter,cadena,comentario;
-terminal mientras,hacer,fmientras;
-terminal si,o_si,de_lo_contrario,fi_si,entonces,segun,inteA,inteC,fin_segun;
-terminal ingresar,como,con_valor,variables,ptcoma,asignarValor;
-terminal para,hasta,fpara,con,incremental;
-terminal repetir,hasta_que,retornar;
-terminal metodo,con_parametros,fin_metodo,funcion,fin_funcion;
-terminal imprimir,imprimir_nl,ejecutar;
+terminal String mas,menos,por,division,potencia,mod,parA,parC,corA,corC;
+terminal String mayorQue,menorQue,mayorOIgual,menorOIgual,igualLogico,or,and,not,diferente;
+terminal String caracter,cadena,comentario;
+terminal String mientras,hacer,fmientras;
+terminal String si,o_si,de_lo_contrario,fi_si,entonces,segun,inteA,inteC,fin_segun;
+terminal String ingresar,como,con_valor,variables,ptcoma,asignarValor;
+terminal String para,hasta,fpara,con,incremental;
+terminal String repetir,hasta_que,retornar;
+terminal String metodo,con_parametros,fin_metodo,funcion,fin_funcion;
+terminal String imprimir,imprimir_nl,ejecutar;
 // no terminales
-non terminal OSI,VARNAME;
-non terminal INICIO,ASIGNACION,ASIGNACIONOTRAS,DECLARACION,ENUMERICA,INSTRUCCION,EXPRESIONLOGICA, EXPRESIONRELACIONAL,INSTRUCCIONES,INI;
-non terminal SEGUNOP , VARNAMEMF,EJECUCIONV,IMPRIMIRV;
+non terminal String OSI,VARNAME;
+non terminal String INICIO,ASIGNACION,ASIGNACIONOTRAS,DECLARACION,ENUMERICA,EXPRESIONLOGICA, EXPRESIONRELACIONAL,INI;
+non terminal String INSTRUCCIONES;
+non terminal String INSTRUCCION;
+non terminal String SEGUNOP , VARNAMEMF,EJECUCIONV,IMPRIMIRV;
 //precedencias gerarquicas
 precedence left mas,menos;
 precedence left division,por;
 precedence left potencia,mod;
 
 precedence right not;
+
 // gramaticas
+
 start with INICIO;
 
 INICIO::=inicio INI fin;
 INI::= INSTRUCCIONES;
 // operaciones aritmeticas
-ENUMERICA::= ENUMERICA mas ENUMERICA
-    |ENUMERICA menos ENUMERICA
-    |ENUMERICA por ENUMERICA
-    |ENUMERICA division ENUMERICA
-    |ENUMERICA potencia ENUMERICA
-    |ENUMERICA mod ENUMERICA
-    |parA ENUMERICA parC
-    |corA ENUMERICA corC
-    |menos ENUMERICA
-    |numero
-    |variables
-;
-EXPRESIONRELACIONAL::= ENUMERICA mayorQue ENUMERICA
-    |ENUMERICA menorQue ENUMERICA
-    |ENUMERICA mayorOIgual ENUMERICA
-    |ENUMERICA menorOIgual ENUMERICA
-    |ENUMERICA igualLogico ENUMERICA
-    |cadena igualLogico cadena
-    |caracter igualLogico caracter
-    |ENUMERICA diferente ENUMERICA
-    |caracter diferente caracter
-    |cadena diferente cadena
-    |parA EXPRESIONRELACIONAL parC
+ENUMERICA::= ENUMERICA:a mas ENUMERICA:b{:RESULT=String.valueOf(a)+"+"+String.valueOf(b);:}
+    |ENUMERICA:a  menos ENUMERICA:b {:RESULT=String.valueOf(a)+"-"+String.valueOf(b);:}
+    |ENUMERICA:a por ENUMERICA:b {:RESULT=String.valueOf(a)+"*"+String.valueOf(b);:}
+    |ENUMERICA:a division ENUMERICA:b {:RESULT=String.valueOf(a)+"+/"+String.valueOf(b);:}
+    |ENUMERICA:a potencia ENUMERICA:b {:RESULT=String.valueOf(a)+"potencia"+String.valueOf(b);:}
+    |ENUMERICA:a mod ENUMERICA:b {:RESULT=String.valueOf(a)+"%"+String.valueOf(b);:}
+    |parA ENUMERICA:a parC {:RESULT="("+String.valueOf(a)+")";:}
+    |corA ENUMERICA:a corC {:RESULT="["+String.valueOf(a)+"]";:}
+    |numero:a{:RESULT=String.valueOf(a);:}
+    |variables:a{:RESULT=String.valueOf(a);:}
     |error
 ;
+EXPRESIONRELACIONAL::= ENUMERICA:a mayorQue ENUMERICA:b {:RESULT=String.valueOf(a)+">"+String.valueOf(a);:}
+    |ENUMERICA:a menorQue ENUMERICA:b {:RESULT=String.valueOf(a)+"<"+String.valueOf(a);:}
+    |ENUMERICA:a mayorOIgual ENUMERICA:b {:RESULT=String.valueOf(a)+">="+String.valueOf(a);:}
+    |ENUMERICA:a menorOIgual ENUMERICA:b {:RESULT=String.valueOf(a)+"<="+String.valueOf(a);:}
+    |ENUMERICA:a igualLogico ENUMERICA:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(a);:}
+    |cadena:a igualLogico cadena:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(a);:}
+    |caracter:a igualLogico caracter:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(a);:}
+    |ENUMERICA:a diferente ENUMERICA:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(a);:}
+    |caracter:a diferente caracter:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(a);:}
+    |cadena:a diferente cadena:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(a);:}
+    |parA EXPRESIONRELACIONAL:a parC {:RESULT="("+String.valueOf(a)+")";:}
+;
 ASIGNACION::=
-    VARNAME asignarValor ENUMERICA ptcoma
+    VARNAME:a asignarValor ENUMERICA:b ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(b),"","","ASIGNACION");:}
+    |VARNAME:a asignarValor cadena:b ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(b),"","","ASIGNACION");:}
 ;
 ASIGNACIONOTRAS::=
     VARNAME asignarValor ENUMERICA
 ;
-DECLARACION::=ingresar VARNAME como tipoDato con_valor ENUMERICA ptcoma
-    |ingresar VARNAME como tipoDato con_valor cadena ptcoma
-    |ingresar VARNAME como tipoDato con_valor caracter ptcoma
-    |ingresar VARNAME como tipoDato con_valor booleanR ptcoma
-    |ingresar VARNAME como tipoDato con_valor EXPRESIONRELACIONAL ptcoma
+DECLARACION::=ingresar VARNAME:a como tipoDato:b con_valor ENUMERICA:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
+    |ingresar VARNAME:a como tipoDato:b con_valor cadena:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
+    |ingresar VARNAME:a como tipoDato:b con_valor caracter:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
+    |ingresar VARNAME:a como tipoDato:b con_valor booleanR:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
+    |ingresar VARNAME:a como tipoDato:b con_valor EXPRESIONRELACIONAL:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
     ;
-VARNAME::= variables
-    |VARNAME coma variables
+VARNAME::= variables:a {:RESULT = String.valueOf(a);:}
+    |VARNAME:a coma:b variables:c {:RESULT = String.valueOf(a)+String.valueOf(b)+String.valueOf(c);:}
     ;
-VARNAMEMF::= variables tipoDato
-    | VARNAMEMF coma variables tipoDato
+VARNAMEMF::= variables:a tipoDato:b {:RESULT=String.valueOf(a)+" "+String.valueOf(b);:}
+    | VARNAMEMF:a coma variables:b tipoDato:c {:RESULT=String.valueOf(a)+", "+String.valueOf(b)+" "+String.valueOf(c);:}
     ;
-EXPRESIONLOGICA::= EXPRESIONRELACIONAL or EXPRESIONRELACIONAL
-    |EXPRESIONRELACIONAL and EXPRESIONRELACIONAL
-    |not EXPRESIONRELACIONAL
-    |EXPRESIONRELACIONAL
+EXPRESIONLOGICA::= EXPRESIONRELACIONAL:a or EXPRESIONRELACIONAL:b {:RESULT=String.valueOf(a)+"OR"+String.valueOf(b);:}
+    |EXPRESIONRELACIONAL:a and EXPRESIONRELACIONAL:b {:RESULT=String.valueOf(a)+"AND"+String.valueOf(b);:}
+    |not EXPRESIONRELACIONAL:a {:RESULT="NOT "+String.valueOf(a);:}
+    |EXPRESIONRELACIONAL:a {:RESULT=String.valueOf(a);:}
     ;
 INSTRUCCIONES::=
     INSTRUCCIONES INSTRUCCION
     |INSTRUCCION
     ;
-EJECUCIONV::=ENUMERICA
-    |EJECUCIONV coma ENUMERICA
-    |cadena
-    |EJECUCIONV coma cadena
-    |caracter
-    |EJECUCIONV coma caracter
-    |EXPRESIONRELACIONAL
-    |EJECUCIONV coma EXPRESIONRELACIONAL
-    |booleanR
-    |EJECUCIONV coma booleanR
+EJECUCIONV::=ENUMERICA:a {:RESULT=String.valueOf(a);:}
+    |EJECUCIONV:b coma ENUMERICA:a {:RESULT=String.valueOf(b)+", "+String.valueOf(a);:}
+    |cadena:a {:RESULT=String.valueOf(a);:}
+    |EJECUCIONV:b coma cadena:a {:RESULT=String.valueOf(b)+", "+String.valueOf(a);:}
+    |caracter:a {:RESULT=String.valueOf(a);:}
+    |EJECUCIONV:b coma caracter:a {:RESULT=String.valueOf(b)+", "+String.valueOf(a);:}
+    |EXPRESIONRELACIONAL:a {:RESULT=String.valueOf(a);:}
+    |EJECUCIONV:b coma EXPRESIONRELACIONAL:a {:RESULT=String.valueOf(b)+", "+String.valueOf(a);:}
+    |booleanR:a {:RESULT=String.valueOf(a);:}
+    |EJECUCIONV:b coma booleanR:a {:RESULT=String.valueOf(b)+", "+String.valueOf(a);:}
 ;
-IMPRIMIRV::= imprimir cadena ptcoma
-    |imprimir caracter ptcoma
-    |imprimir ejecutar variables parA parC ptcoma
-    |imprimir ejecutar variables parA EJECUCIONV parC ptcoma
-    |imprimir ENUMERICA ptcoma
-    |imprimir EXPRESIONRELACIONAL ptcoma
-    |imprimir parA cadena parC ptcoma
-    |imprimir parA caracter parC ptcoma
-    |imprimir parA ejecutar variables parA parC parC ptcoma
-    |imprimir parA ejecutar variables parA EJECUCIONV parC parC ptcoma
-    |imprimir_nl cadena ptcoma
-    |imprimir_nl caracter ptcoma
-    |imprimir_nl ejecutar variables parA parC ptcoma
-    |imprimir_nl ejecutar variables parA EJECUCIONV parC ptcoma
-    |imprimir_nl ENUMERICA ptcoma
-    |imprimir_nl EXPRESIONRELACIONAL ptcoma
-    |imprimir_nl parA cadena parC ptcoma
-    |imprimir_nl parA caracter parC ptcoma
-    |imprimir_nl parA ejecutar variables parA parC parC ptcoma
-    |imprimir_nl parA ejecutar variables parA EJECUCIONV parC parC ptcoma
+
+IMPRIMIRV::= imprimir cadena:a ptcoma {:listaTokens.addNode("",String.valueOf(a),"","","IMPRIMIR");:}
+    |imprimir caracter:a ptcoma {:listaTokens.addNode("",String.valueOf(a),"","","IMPRIMIR");:}
+    |imprimir ENUMERICA:a ptcoma {:listaTokens.addNode("",String.valueOf(a),"","","IMPRIMIR");:}
+    |imprimir EXPRESIONRELACIONAL:a ptcoma {:listaTokens.addNode("",String.valueOf(a),"","","IMPRIMIR");:}
+    |imprimir parA cadena:a parC ptcoma {:listaTokens.addNode("","("+String.valueOf(a)+")","","","IMPRIMIR");:}
+    |imprimir parA caracter:a parC ptcoma {:listaTokens.addNode("","("+String.valueOf(a)+")","","","IMPRIMIR");:}
+    |imprimir_nl cadena:a ptcoma {:listaTokens.addNode("",String.valueOf(a),"","","IMPRIMIRLN");:}
+    |imprimir_nl caracter:a ptcoma {:listaTokens.addNode("",String.valueOf(a),"","","IMPRIMIRLN");:}
+    |imprimir_nl ENUMERICA:a ptcoma {:listaTokens.addNode("",String.valueOf(a),"","","IMPRIMIRLN");:}
+    |imprimir_nl EXPRESIONRELACIONAL:a ptcoma {:listaTokens.addNode("",String.valueOf(a),"","","IMPRIMIRLN");:}
+    |imprimir_nl parA cadena:a parC ptcoma {:listaTokens.addNode("","("+String.valueOf(a)+")","","","IMPRIMIRLN");:}
+    |imprimir_nl parA caracter:a parC ptcoma {:listaTokens.addNode("","("+String.valueOf(a)+")","","","IMPRIMIRLN");:}
 ;
-INSTRUCCION::= mientras EXPRESIONLOGICA hacer INSTRUCCIONES fmientras
-    |mientras EXPRESIONLOGICA hacer fmientras
-    |si EXPRESIONLOGICA entonces INSTRUCCION fi_si
-    |si EXPRESIONLOGICA entonces INSTRUCCION de_lo_contrario INSTRUCCIONES fi_si
-    |si EXPRESIONLOGICA entonces INSTRUCCION OSI fi_si
-    |si EXPRESIONLOGICA entonces INSTRUCCION OSI de_lo_contrario INSTRUCCIONES fi_si
-    |para ASIGNACIONOTRAS hasta ENUMERICA hacer INSTRUCCIONES fpara
-    |para ASIGNACIONOTRAS hasta ENUMERICA    con incremental ENUMERICA hacer INSTRUCCIONES fpara
+
+OSI::= OSI o_si EXPRESIONLOGICA:a{:listaTokens.addNode("",String.valueOf(a),"","","ELSEIF");:} entonces INSTRUCCIONES  de_lo_contrario {:listaTokens.addNode("","","","","ELSE");:} INSTRUCCIONES
+    | o_si EXPRESIONLOGICA:a entonces {:listaTokens.addNode("",String.valueOf(a),"","","ELSEIF");:} INSTRUCCIONES de_lo_contrario {:listaTokens.addNode("","","","","ELSE");:} INSTRUCCIONES;
+
+SEGUNOP::= SEGUNOP inteA ENUMERICA inteC entonces INSTRUCCIONES
+    |inteA ENUMERICA inteC entonces INSTRUCCIONES
+;
+INSTRUCCION::= mientras EXPRESIONLOGICA:a hacer {:listaTokens.addNode("","("+String.valueOf(a)+")","","","MIENTRAS");:} INSTRUCCIONES fmientras {:listaTokens.addNode("","","","","F_MIENTRAS");:}
+    |mientras EXPRESIONLOGICA:a hacer fmientras {:listaTokens.addNode("","","","","F_MIENTRAS");:}
+    |si EXPRESIONLOGICA:a entonces INSTRUCCION de_lo_contrario fi_si
+    |si EXPRESIONLOGICA:a entonces INSTRUCCION OSI fi_si
+    |para ASIGNACIONOTRAS:a hasta ENUMERICA hacer INSTRUCCIONES fpara
+    |para ASIGNACIONOTRAS hasta ENUMERICA con incremental ENUMERICA hacer INSTRUCCIONES fpara
     |para ASIGNACIONOTRAS hasta ENUMERICA hacer fpara
-    |para ASIGNACIONOTRAS hasta ENUMERICA    con incremental ENUMERICA hacer fpara
-    |repetir INSTRUCCIONES hasta_que EXPRESIONLOGICA
-    |repetir hasta_que EXPRESIONLOGICA
-    |segun ENUMERICA hacer SEGUNOP de_lo_contrario entonces INSTRUCCIONES fin_segun
-    |metodo variables INSTRUCCIONES fin_metodo
-    |metodo variables con_parametros parA VARNAMEMF parC INSTRUCCIONES fin_metodo
+    |para ASIGNACIONOTRAS hasta ENUMERICA con incremental ENUMERICA hacer fpara
+    |repetir{:listaTokens.addNode("","","","","REPETIR");:} INSTRUCCIONES hasta_que EXPRESIONLOGICA:a {:listaTokens.addNode("",String.valueOf(a),"","","F_REPETIR");:}
+    |repetir{:listaTokens.addNode("","","","","REPETIR");:} hasta_que EXPRESIONLOGICA:a {:listaTokens.addNode("",String.valueOf(a),"","","F_REPETIR");:}
+    |segun ENUMERICA:a hacer SEGUNOP de_lo_contrario entonces INSTRUCCIONES fin_segun
+    |metodo variables:a {:listaTokens.addNode(String.valueOf(a),"","","","METODO");:} INSTRUCCIONES fin_metodo {:listaTokens.addNode("","","","","F_METODO");:}
+    |metodo variables:a con_parametros parA VARNAMEMF:b parC {:listaTokens.addNode(String.valueOf(a),"("+String.valueOf(b)+")","","","METODO");:} INSTRUCCIONES fin_metodo {:listaTokens.addNode("","","","","F_METODO");:}
     |funcion variables tipoDato INSTRUCCIONES fin_funcion
     |funcion variables tipoDato retornar ENUMERICA ptcoma fin_funcion
     |funcion variables tipoDato retornar EXPRESIONLOGICA ptcoma fin_funcion
@@ -156,16 +164,11 @@ INSTRUCCION::= mientras EXPRESIONLOGICA hacer INSTRUCCIONES fmientras
     |funcion variables tipoDato con_parametros parA VARNAMEMF parC retornar EXPRESIONRELACIONAL ptcoma fin
     |funcion variables tipoDato con_parametros parA VARNAMEMF parC INSTRUCCIONES retornar ENUMERICA ptcoma fin_funcion
     |funcion variables tipoDato con_parametros parA VARNAMEMF parC INSTRUCCIONES retornar EXPRESIONRELACIONAL ptcoma fin_funcion
-    |ejecutar variables parA parC ptcoma
-    |ejecutar variables parA EJECUCIONV parC ptcoma
+    |ejecutar variables:a parA parC ptcoma{:listaTokens.addNode("",String.valueOf(a),"","","EJECUTAR");:}
+    |ejecutar variables:a parA EJECUCIONV:b parC ptcoma {:listaTokens.addNode("",String.valueOf(a),String.valueOf(b),"","EJECUTAR");:}
     |comentario
     |DECLARACION
-    |ENUMERICA
     |ASIGNACION
     |IMPRIMIRV
     ;
-SEGUNOP::= SEGUNOP inteA ENUMERICA inteC entonces INSTRUCCIONES
-    |inteA ENUMERICA inteC entonces INSTRUCCIONES
-;
-OSI::= OSI o_si EXPRESIONLOGICA entonces INSTRUCCIONES
-    | o_si EXPRESIONLOGICA entonces INSTRUCCIONES;
+
