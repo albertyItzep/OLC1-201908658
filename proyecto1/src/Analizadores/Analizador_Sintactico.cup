@@ -60,7 +60,7 @@ INI::= INSTRUCCIONES;
 ENUMERICA::= ENUMERICA:a mas ENUMERICA:b{:RESULT=String.valueOf(a)+"+"+String.valueOf(b);:}
     |ENUMERICA:a  menos ENUMERICA:b {:RESULT=String.valueOf(a)+"-"+String.valueOf(b);:}
     |ENUMERICA:a por ENUMERICA:b {:RESULT=String.valueOf(a)+"*"+String.valueOf(b);:}
-    |ENUMERICA:a division ENUMERICA:b {:RESULT=String.valueOf(a)+"+/"+String.valueOf(b);:}
+    |ENUMERICA:a division ENUMERICA:b {:RESULT=String.valueOf(a)+"/"+String.valueOf(b);:}
     |ENUMERICA:a potencia ENUMERICA:b {:RESULT=String.valueOf(a)+"potencia"+String.valueOf(b);:}
     |ENUMERICA:a mod ENUMERICA:b {:RESULT=String.valueOf(a)+"%"+String.valueOf(b);:}
     |parA ENUMERICA:a parC {:RESULT="("+String.valueOf(a)+")";:}
@@ -69,16 +69,16 @@ ENUMERICA::= ENUMERICA:a mas ENUMERICA:b{:RESULT=String.valueOf(a)+"+"+String.va
     |variables:a{:RESULT=String.valueOf(a);:}
     |error
 ;
-EXPRESIONRELACIONAL::= ENUMERICA:a mayorQue ENUMERICA:b {:RESULT=String.valueOf(a)+">"+String.valueOf(a);:}
-    |ENUMERICA:a menorQue ENUMERICA:b {:RESULT=String.valueOf(a)+"<"+String.valueOf(a);:}
-    |ENUMERICA:a mayorOIgual ENUMERICA:b {:RESULT=String.valueOf(a)+">="+String.valueOf(a);:}
-    |ENUMERICA:a menorOIgual ENUMERICA:b {:RESULT=String.valueOf(a)+"<="+String.valueOf(a);:}
-    |ENUMERICA:a igualLogico ENUMERICA:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(a);:}
-    |cadena:a igualLogico cadena:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(a);:}
-    |caracter:a igualLogico caracter:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(a);:}
-    |ENUMERICA:a diferente ENUMERICA:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(a);:}
-    |caracter:a diferente caracter:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(a);:}
-    |cadena:a diferente cadena:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(a);:}
+EXPRESIONRELACIONAL::= ENUMERICA:a mayorQue ENUMERICA:b {:RESULT=String.valueOf(a)+">"+String.valueOf(b);:}
+    |ENUMERICA:a menorQue ENUMERICA:b {:RESULT=String.valueOf(a)+"<"+String.valueOf(b);:}
+    |ENUMERICA:a mayorOIgual ENUMERICA:b {:RESULT=String.valueOf(a)+">="+String.valueOf(b);:}
+    |ENUMERICA:a menorOIgual ENUMERICA:b {:RESULT=String.valueOf(a)+"<="+String.valueOf(b);:}
+    |ENUMERICA:a igualLogico ENUMERICA:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(b);:}
+    |cadena:a igualLogico cadena:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(b);:}
+    |caracter:a igualLogico caracter:b {:RESULT=String.valueOf(a)+"=="+String.valueOf(b);:}
+    |ENUMERICA:a diferente ENUMERICA:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(b);:}
+    |caracter:a diferente caracter:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(b);:}
+    |cadena:a diferente cadena:b {:RESULT=String.valueOf(a)+"!="+String.valueOf(b);:}
     |parA EXPRESIONRELACIONAL:a parC {:RESULT="("+String.valueOf(a)+")";:}
 ;
 ASIGNACION::=
@@ -86,11 +86,11 @@ ASIGNACION::=
     |VARNAME:a asignarValor cadena:b ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(b),"","","ASIGNACION");:}
 ;
 ASIGNACIONOTRAS::=
-    VARNAME asignarValor ENUMERICA
+    VARNAME:a asignarValor ENUMERICA:b {:RESULT=String.valueOf(a)+"ASIGNAR"+String.valueOf(b);:}
 ;
 DECLARACION::=ingresar VARNAME:a como tipoDato:b con_valor ENUMERICA:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
     |ingresar VARNAME:a como tipoDato:b con_valor cadena:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
-    |ingresar VARNAME:a como tipoDato:b con_valor caracter:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
+    |ingresar VARNAME:a como tipoDato con_valor caracter:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"","caracter","DECLARACION");:}
     |ingresar VARNAME:a como tipoDato:b con_valor booleanR:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
     |ingresar VARNAME:a como tipoDato:b con_valor EXPRESIONRELACIONAL:c ptcoma {:listaTokens.addNode(String.valueOf(a),String.valueOf(c),"",String.valueOf(b),"DECLARACION");:}
     ;
@@ -105,8 +105,7 @@ EXPRESIONLOGICA::= EXPRESIONRELACIONAL:a or EXPRESIONRELACIONAL:b {:RESULT=Strin
     |not EXPRESIONRELACIONAL:a {:RESULT="NOT "+String.valueOf(a);:}
     |EXPRESIONRELACIONAL:a {:RESULT=String.valueOf(a);:}
     ;
-INSTRUCCIONES::=
-    INSTRUCCIONES INSTRUCCION
+INSTRUCCIONES::= INSTRUCCIONES INSTRUCCION
     |INSTRUCCION
     ;
 EJECUCIONV::=ENUMERICA:a {:RESULT=String.valueOf(a);:}
@@ -135,25 +134,22 @@ IMPRIMIRV::= imprimir cadena:a ptcoma {:listaTokens.addNode("",String.valueOf(a)
     |imprimir_nl parA caracter:a parC ptcoma {:listaTokens.addNode("","("+String.valueOf(a)+")","","","IMPRIMIRLN");:}
 ;
 
-OSI::= OSI o_si EXPRESIONLOGICA:a{:listaTokens.addNode("",String.valueOf(a),"","","ELSEIF");:} entonces INSTRUCCIONES  de_lo_contrario {:listaTokens.addNode("","","","","ELSE");:} INSTRUCCIONES
-    | o_si EXPRESIONLOGICA:a entonces {:listaTokens.addNode("",String.valueOf(a),"","","ELSEIF");:} INSTRUCCIONES de_lo_contrario {:listaTokens.addNode("","","","","ELSE");:} INSTRUCCIONES;
+OSI::= OSI o_si EXPRESIONLOGICA:a{:listaTokens.addNode("",String.valueOf(a),"","","ELSEIF");:} entonces INSTRUCCIONES {:listaTokens.addNode("","","","","F_ELSEIF");:}
+    | o_si EXPRESIONLOGICA:a entonces {:listaTokens.addNode("",String.valueOf(a),"","","ELSEIF");:} INSTRUCCIONES
+    ;
 
-SEGUNOP::= SEGUNOP inteA ENUMERICA inteC entonces INSTRUCCIONES
-    |inteA ENUMERICA inteC entonces INSTRUCCIONES
+SEGUNOP::= SEGUNOP inteA ENUMERICA:a inteC entonces {:listaTokens.addNode("",String.valueOf(a),"","","CASE");:} INSTRUCCIONES {:listaTokens.addNode("","","","","F_CASE");:}
+    |inteA ENUMERICA:a inteC entonces {:listaTokens.addNode("",String.valueOf(a),"","","CASE");:} INSTRUCCIONES {:listaTokens.addNode("","","","","F_CASE");:}
 ;
-INSTRUCCION::= mientras EXPRESIONLOGICA:a hacer {:listaTokens.addNode("","("+String.valueOf(a)+")","","","MIENTRAS");:} INSTRUCCIONES fmientras {:listaTokens.addNode("","","","","F_MIENTRAS");:}
-    |mientras EXPRESIONLOGICA:a hacer fmientras {:listaTokens.addNode("","","","","F_MIENTRAS");:}
-    |si EXPRESIONLOGICA:a entonces INSTRUCCION de_lo_contrario fi_si
-    |si EXPRESIONLOGICA:a entonces INSTRUCCION OSI fi_si
-    |para ASIGNACIONOTRAS:a hasta ENUMERICA hacer INSTRUCCIONES fpara
-    |para ASIGNACIONOTRAS hasta ENUMERICA con incremental ENUMERICA hacer INSTRUCCIONES fpara
+INSTRUCCION::=
+     mientras EXPRESIONLOGICA:a hacer {:listaTokens.addNode("",String.valueOf(a),"","","MIENTRAS");:} fmientras {:listaTokens.addNode("","","","","F_MIENTRAS");:}
+    |mientras EXPRESIONLOGICA:a hacer {:listaTokens.addNode("","("+String.valueOf(a)+")","","","MIENTRAS");:} INSTRUCCIONES fmientras {:listaTokens.addNode("","","","","F_MIENTRAS");:}
+    |si EXPRESIONLOGICA:a  entonces INSTRUCCIONES fi_si {:System.out.println("hola");:}
+    |si EXPRESIONLOGICA entonces INSTRUCCIONES de_lo_contrario INSTRUCCIONES fi_si
+    |si EXPRESIONLOGICA entonces INSTRUCCIONES OSI de_lo_contrario INSTRUCCIONES fi_si
+    |para ASIGNACIONOTRAS hasta ENUMERICA hacer INSTRUCCIONES fpara
     |para ASIGNACIONOTRAS hasta ENUMERICA hacer fpara
-    |para ASIGNACIONOTRAS hasta ENUMERICA con incremental ENUMERICA hacer fpara
-    |repetir{:listaTokens.addNode("","","","","REPETIR");:} INSTRUCCIONES hasta_que EXPRESIONLOGICA:a {:listaTokens.addNode("",String.valueOf(a),"","","F_REPETIR");:}
-    |repetir{:listaTokens.addNode("","","","","REPETIR");:} hasta_que EXPRESIONLOGICA:a {:listaTokens.addNode("",String.valueOf(a),"","","F_REPETIR");:}
-    |segun ENUMERICA:a hacer SEGUNOP de_lo_contrario entonces INSTRUCCIONES fin_segun
-    |metodo variables:a {:listaTokens.addNode(String.valueOf(a),"","","","METODO");:} INSTRUCCIONES fin_metodo {:listaTokens.addNode("","","","","F_METODO");:}
-    |metodo variables:a con_parametros parA VARNAMEMF:b parC {:listaTokens.addNode(String.valueOf(a),"("+String.valueOf(b)+")","","","METODO");:} INSTRUCCIONES fin_metodo {:listaTokens.addNode("","","","","F_METODO");:}
+    |para ASIGNACIONOTRAS hasta ENUMERICA con incremental ENUMERICA hacer INSTRUCCIONES fpara
     |funcion variables tipoDato INSTRUCCIONES fin_funcion
     |funcion variables tipoDato retornar ENUMERICA ptcoma fin_funcion
     |funcion variables tipoDato retornar EXPRESIONLOGICA ptcoma fin_funcion
@@ -164,11 +160,17 @@ INSTRUCCION::= mientras EXPRESIONLOGICA:a hacer {:listaTokens.addNode("","("+Str
     |funcion variables tipoDato con_parametros parA VARNAMEMF parC retornar EXPRESIONRELACIONAL ptcoma fin
     |funcion variables tipoDato con_parametros parA VARNAMEMF parC INSTRUCCIONES retornar ENUMERICA ptcoma fin_funcion
     |funcion variables tipoDato con_parametros parA VARNAMEMF parC INSTRUCCIONES retornar EXPRESIONRELACIONAL ptcoma fin_funcion
+    |repetir{:listaTokens.addNode("","","","","REPETIR");:} INSTRUCCIONES hasta_que EXPRESIONLOGICA:a {:listaTokens.addNode("",String.valueOf(a),"","","F_REPETIR");:}
+    |repetir{:listaTokens.addNode("","","","","REPETIR");:} hasta_que EXPRESIONLOGICA:a {:listaTokens.addNode("",String.valueOf(a),"","","F_REPETIR");:}
+    |segun ENUMERICA:a {:listaTokens.addNode("","("+String.valueOf(a)+")","","","SWICH");:} hacer SEGUNOP de_lo_contrario entonces {:listaTokens.addNode("","","","","ELSECASE");:} INSTRUCCIONES fin_segun{:listaTokens.addNode("","","","","F_SWICH");:}
+    |metodo variables:a {:listaTokens.addNode(String.valueOf(a),"","","","METODO");:} INSTRUCCIONES fin_metodo {:listaTokens.addNode("","","","","F_METODO");:}
+    |metodo variables:a con_parametros parA VARNAMEMF:b parC {:listaTokens.addNode(String.valueOf(a),String.valueOf(b),"","","METODO");:} INSTRUCCIONES fin_metodo {:listaTokens.addNode("","","","","F_METODO");:}
     |ejecutar variables:a parA parC ptcoma{:listaTokens.addNode("",String.valueOf(a),"","","EJECUTAR");:}
     |ejecutar variables:a parA EJECUCIONV:b parC ptcoma {:listaTokens.addNode("",String.valueOf(a),String.valueOf(b),"","EJECUTAR");:}
-    |comentario
     |DECLARACION
     |ASIGNACION
     |IMPRIMIRV
+    |ENUMERICA
+    |comentario
     ;
 
