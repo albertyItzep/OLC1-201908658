@@ -82,10 +82,11 @@ INSTRUCCIONES
     |INSTRUCCION
 ;
 INSTRUCCION
-    :DECLARACION
-    |ASIGNACIONES
-    |INCREMENTO_DECREMENTO
-    |VECTORES
+    : DECLARACION
+    | ASIGNACIONES
+    | INCREMENTO_DECREMENTO
+    | VECTORES
+    | par_izq TIPOVARIABLE par_der EXP
     | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
@@ -146,7 +147,6 @@ EXP
     | no EXP
     //agrupacion
     | par_izq EXP par_der
-    | par_izq TIPOVARIABLE par_der EXP
     //valores Primitivos
     | numero
     | cadena
