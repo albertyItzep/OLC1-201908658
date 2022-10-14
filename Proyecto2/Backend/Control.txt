@@ -1,0 +1,10 @@
+Analisis lexico y sintactico
+comentarios             -- ok
+tipos de datos          -- ok
+secuencias de scape     -- 90%
+operadores Aritmeticos  -- ok
+operador ternario       -- ok
+operadores logicos      -- ok
+operadores relacionales -- ok
+declaraciones           -- 100
+asignaciones            -- 100
