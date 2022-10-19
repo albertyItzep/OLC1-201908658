@@ -6,5 +6,18 @@ operadores Aritmeticos  -- ok
 operador ternario       -- ok
 operadores logicos      -- ok
 operadores relacionales -- ok
-declaraciones           -- 100
-asignaciones            -- 100
+declaraciones           -- ok
+asignaciones            -- ok
+vectores                -- ok
+if                      -- ok
+switch                  -- ok
+while                   -- ok
+for                     -- ok
+do while                -- ok
+do until                -- ok
+break                   -- ok
+continue                -- ok
+return                  -- ok
+print                   -- ok
+println                 -- ok
+
