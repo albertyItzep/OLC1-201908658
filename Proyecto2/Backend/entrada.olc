@@ -1,14 +1,4 @@
-const express = require('express')
-const parse = require('./Modulos/Analizador/Gramatica')
-const morgan = require('morgan')
-const app = express();
-app.listen(8080,()=>{
-    console.log("Hello Word");
-})
-app.use(morgan());
 
-app.get('/parse',(req,res)=>{
-    parse.parse(`
     //hola como estan
     int holaMundo;
     /*
@@ -51,7 +41,6 @@ app.get('/parse',(req,res)=>{
             Boolean boolInt = (Boolean) 0; //false
             Boolean boolDouble = (Boolean) 1.0; //true
             Boolean boolString = (Boolean) "0"; //false 
-
             String [ ] vector2 = {"hola", "Mundo"}; //creamos un vector de 2 posiciones de tipo string
             String valorPosicion = vector2[1]; //posición 1, valorPosicion = “hola”
             Char [ ][ ] vectorDosd = new char [4] [4] ; // creamos vector de 4x4
@@ -73,7 +62,6 @@ app.get('/parse',(req,res)=>{
             Boolean boolInt = (Boolean) 0; //false
             Boolean boolDouble = (Boolean) 1.0; //true
             Boolean boolString = (Boolean) "0"; //false 
-
             String [ ] vector2 = {"hola", "Mundo"}; //creamos un vector de 2 posiciones de tipo string
             String valorPosicion = vector2[1]; //posición 1, valorPosicion = “hola” 70
             Char [ ][ ] vectorDosd = new char [4] [4] ; // creamos vector de 4x4
@@ -93,7 +81,6 @@ app.get('/parse',(req,res)=>{
             Boolean boolInt = (Boolean) 0; //false
             Boolean boolDouble = (Boolean) 1.0; //true
             Boolean boolString = (Boolean) "0"; //false 
-
             String [ ] vector2 = {"hola", "Mundo"}; //creamos un vector de 2 posiciones de tipo string
             String valorPosicion = vector2[1]; //posición 1, valorPosicion = “hola” //90
             Char [ ][ ] vectorDosd = new char [4] [4] ; // creamos vector de 4x4
@@ -251,16 +238,12 @@ app.get('/parse',(req,res)=>{
     Println("Hola mundo!!");
     Println("Sale compi \n" + valor + "!!");
     Println(suma(2,2));
-
     string cad_1 = toLower("hOla MunDo"); // cad_1 = "hola mundo"
     string cad_2 = toLower("RESULTADO = " + 100); // cad_2 = "resultado = 100"
-
     string cad_1 = toUpper("hOla MunDo");
     string cad_2 = toUpper("resultado = " + 100);
-
     Double valor = round(5.8); //valor = 6
     Double valor2 = round(5.4); //valor2 = 5
-
     string [ ] vector2 = {"hola", "Mundo"};
     
     int tam_vector = length(vector2); // tam_vector = 2
@@ -270,15 +253,11 @@ app.get('/parse',(req,res)=>{
     String tipo = typeof(15); 
     String tipo2 = typeof(15.25);//262
     String tipo3 = typeof(lista2);
-
     String valor = toString(14); 
     String valor2 = toString(true);
-
     Char[] caracteres = toCharArray("Hola");
-
     string[ ] vector2 = {"hola", "Mundo"};
     vector2.push("bonito");
-
     string[ ] vector2 = {"hola", "Mundo","bonito"};
     vector2.pop();
     funcion1():void{
@@ -290,6 +269,4 @@ app.get('/parse',(req,res)=>{
     }
     Run funcion2("hola soy un mensaje");
         
-    `)
-    res.send("<h1>hola</h1>")
-})
+    
