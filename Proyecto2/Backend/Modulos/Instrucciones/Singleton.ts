@@ -23,5 +23,11 @@ export class Singleton {
         return this.error;
     }
     
+    public add_AST(cadena:string):void {
+        this.AST+= cadena;
+    }
+    public get_AST():string{
+        return this.AST;
+    }
 
 }

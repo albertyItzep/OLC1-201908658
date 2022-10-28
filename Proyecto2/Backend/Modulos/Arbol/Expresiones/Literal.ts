@@ -8,7 +8,9 @@ export class Literal extends Instruccion {
         columna:number){
         super(linea,columna)
     }
-    public ast(): void {
-        console.log('hola');
+    public ast(): string {
+        let cadena = "";
+        cadena+=`nodo_${this.linea}_${this.columna}[label="<Valor>\\n ${this.a.toString()}"]`;
+        return cadena;
     }
 }

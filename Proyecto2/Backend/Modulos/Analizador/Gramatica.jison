@@ -146,13 +146,14 @@
 %left 'interrogacion'
 %left 'or'
 %left 'and'
-%left 'no'
 %left 'mayor' 'menor' 'mayor_igual' 'menor_igual' 'igual_logico' 'diferente'
 %left 'mas' 'menos'
 %left 'por' 'dividido' 'mod'
 %left UMENOS
 %left 'potencia'
 %left 'incremento' 'decremento'
+
+%right 'no'
 
 %start INI
 
@@ -305,7 +306,7 @@ INSTRUCCION_IF
     : IF                        { $$ = new IfContainer($1,null,null,@1.first_line,@1.first_column);}
     | IF ELSE                   { $$ = new IfContainer($1,null,$2,@1.first_line,@1.first_column);}
     | IF LISTA_ELIF             { $$ = new IfContainer($1,$2,null,@1.first_line,@1.first_column);}
-    | IF LISTA_ELIF ELSE        { $$ = new IfContainer($1,$3,$2,@1.first_line,@1.first_column);}
+    | IF LISTA_ELIF ELSE        { $$ = new IfContainer($1,$2,$3,@1.first_line,@1.first_column);}
 ;
 IF
     //if { instrucciones }
@@ -361,17 +362,17 @@ TIPOVARIABLE
     | string    {$$ = $1}
 ;
 INCREMENTO_DECREMENTO
-    : id incremento punto_coma { $$ = new IncrementoDecremento($1,$2,@1.first_line,@1.first_column);}
-    | id decremento punto_coma { $$ = new IncrementoDecremento($1,$2,@1.first_line,@1.first_column);}
+    : id incremento punto_coma { $$ = new IncrementoDecremento($1,'INCREMENTO',@1.first_line,@1.first_column);}
+    | id decremento punto_coma { $$ = new IncrementoDecremento($1,'DECREMENTO',@1.first_line,@1.first_column);}
 ;
 INCREMENTO_DECREMENTO_EXP
-    : id incremento { $$ = new IncrementoDecremento($1,$2,@1.first_line,@1.first_column);}
-    | id decremento { $$ = new IncrementoDecremento($1,$2,@1.first_line,@1.first_column);}
+    : id incremento { $$ = new IncrementoDecremento($1,'INCREMENTO',@1.first_line,@1.first_column);}
+    | id decremento { $$ = new IncrementoDecremento($1,'DECREMENTO',@1.first_line,@1.first_column);}
 ;
 INCREMENTO_DECREMENTO_FOR
     : id incremento             { $$ = new IncrementoDecremento($1,$2,@1.first_line,@1.first_column);}
     | id decremento             { $$ = new IncrementoDecremento($1,$2,@1.first_line,@1.first_column);}
-    | id igual EXP              { $$ = new IncrementoDecremento($1,$1,@1.first_line,@1.first_column , $3);}
+    | id igual EXP              { $$ = new IncrementoDecremento($1,'AUMENTO_DECREMENTO',@1.first_line,@1.first_column , $3);}
 ;
 ID
     :ID coma id { $$ = $1 + $2 + ' ' + $3}
@@ -455,28 +456,28 @@ EXP
     | EXP igual_logico EXP  { $$ = new Logica($1,$3,'IGUAL',@2.first_line, @2.first_column);}
     | EXP diferente EXP     { $$ = new Logica($1,$3,'DIFERENTE',@2.first_line, @2.first_column);}
     //operador ternario
-    | EXP interrogacion EXP dos_puntos EXP { $$ = new OperadorTernario($1,$3,$5,@1.first_line,@1.first_column);}
+    | EXP interrogacion EXP dos_puntos EXP { $$ = new OperadorTernario($1,$3,$5,@2.first_line,@2.first_column);}
     //operaciones relacionales
-    | EXP or EXP            { $$ = new Relacion($1,$3,'OR',@1.first_line,@1.first_column); }
-    | EXP and EXP           { $$ = new Relacion($1,$3,'AND',@1.first_line,@1.first_column); }
+    | EXP and EXP           { $$ = new Relacion($1,$3,'AND',@2.first_line,@2.first_column); }
+    | EXP or EXP            { $$ = new Relacion($1,$3,'OR',@2.first_line,@2.first_column);  }
     | no EXP                { $$ = new Relacion($1,$2,'NOT',@1.first_line,@1.first_column); }
     //agrupacion
     | par_izq EXP par_der   { $$ = $2; }
     //valores Primitivos
-    | numero                    { $$ = new Literal($1,'NUMERO',@1.first_line, @1.first_column);}
-    | cadena                    { $$ = new Literal($1,'CADENA',@1.first_line, @1.first_column);}
-    | caracter                  { $$ = new Literal($1,'CARACTER',@1.first_line, @1.first_column);}
-    | verdadero                 { $$ = new Literal($1,'BOOLEAN',@1.first_line, @1.first_column);}
-    | falso                     { $$ = new Literal($1,'BOOLEAN',@1.first_line, @1.first_column);}
-    | id                        { $$ = $1; }
-    | ACCESOVECTORES            { $$ = $1}
-    | LLAMADA_FUNCION_EXP       { $$ = $1}
-    | TOLOWER_EXP               { $$ = $1}
-    | TOUPPER_EXP               { $$ = $1}
-    | ROUND_EXP                 { $$ = $1}
-    | LENGTH_EXP                { $$ = $1}
-    | TYPEOF                    { $$ = $1}
-    | TOSTRING                  { $$ = $1}
-    | TOCHARARRAY               { $$ = $1}
+    | numero                    { $$ = new Literal($1,'NUMERO',@1.first_line, @1.first_column);   }
+    | cadena                    { $$ = new Literal($1,'CADENA',@1.first_line, @1.first_column);   }
+    | caracter                  { $$ = new Literal($1,'CARACTER',@1.first_line, @1.first_column); }
+    | verdadero                 { $$ = new Literal($1,'BOOLEAN',@1.first_line, @1.first_column);  }
+    | falso                     { $$ = new Literal($1,'BOOLEAN',@1.first_line, @1.first_column);  }
+    | id                        { $$ = new Literal($1,'ID',@1.first_line, @1.first_column);  }
+    | ACCESOVECTORES            { $$ = $1; }
+    | LLAMADA_FUNCION_EXP       { $$ = $1; }
+    | TOLOWER_EXP               { $$ = $1; }
+    | TOUPPER_EXP               { $$ = $1; }
+    | ROUND_EXP                 { $$ = $1; }
+    | LENGTH_EXP                { $$ = $1; }
+    | TYPEOF                    { $$ = $1; }
+    | TOSTRING                  { $$ = $1; }
+    | TOCHARARRAY               { $$ = $1; }
     | INCREMENTO_DECREMENTO_EXP { $$ = $1; }
 ;

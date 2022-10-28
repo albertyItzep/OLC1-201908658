@@ -10,7 +10,13 @@ export class AccesoVectorX extends Instruccion {
         super(linea,columna);
     }
     
-    public ast(): void {
-        console.log('hola')
+    public ast(): string {
+        let cadena:string="";
+        cadena += `nodo_${this.linea}_${this.columna}[label="<Instruccion>:\\n Acceso Vector [valor]"];\n`;
+        cadena += `id_${this.linea}_${this.columna}[label="<Id>:\\n ${this.nombre}"];\n`;
+        cadena += this.data.ast()+'\n';
+        cadena += `nodo_${this.linea}_${this.columna} -> id_${this.linea}_${this.columna};\n`
+        cadena += `nodo_${this.linea}_${this.columna} -> nodo_${this.data.linea}_${this.data.columna};\n`
+        return cadena;
     }
 }

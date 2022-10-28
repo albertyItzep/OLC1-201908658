@@ -10,7 +10,13 @@ export class Casteo extends Instruccion {
         super(linea,columna);
     }
     
-    public ast(): void {
-        console.log('hola')
+    public ast(): string {
+        let cadena:string ="";
+        cadena+=`nodo_${this.linea}_${this.columna}[label="<Instruccion>:\\n CASTEO"];\n`;
+        cadena+=`tipo_${this.linea}_${this.columna}[label="<Nuevo Tipo>\n ${this.tipo}"];\n`;
+        cadena+=this.data.ast()+'\n';
+        cadena+=`nodo_${this.linea}_${this.columna} -> tipo_${this.linea}_${this.columna};\n`;
+        cadena+=`nodo_${this.linea}_${this.columna} -> nodo_${this.data.linea}_${this.data.columna}\n`;
+        return cadena;
     }
 }

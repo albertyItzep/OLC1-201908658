@@ -3,5 +3,5 @@ export abstract class Instruccion {
         this.linea = linea;
         this.columna = columna;
     }
-    public abstract ast():void;
+    public abstract ast():string;
 }

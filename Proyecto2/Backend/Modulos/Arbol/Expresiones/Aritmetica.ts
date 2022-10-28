@@ -9,7 +9,14 @@ export class Aritmericas extends Instruccion {
         columna:number){
         super(linea,columna)
     }
-    public ast(): void {
-        console.log('hola');
+    public ast(): string {
+        let cadena: string ="";
+        cadena+=`${this.a.ast()}\n`;
+        cadena+=`${this.b.ast()}\n`;
+        cadena+=`nodo_${this.linea}_${this.columna}[label=<Instruccion: "${this.tipo}">];
+nodo_${this.linea}_${this.columna} -> nodo_${this.a.linea}_${this.a.columna};
+nodo_${this.linea}_${this.columna} -> nodo_${this.b.linea}_${this.b.columna};
+        `;
+        return cadena;
     }
 }

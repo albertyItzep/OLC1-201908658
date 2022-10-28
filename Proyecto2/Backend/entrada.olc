@@ -199,7 +199,7 @@
         }
         continue;
        }
-    conversion (double pies, string tipo): double {
+    conversion (double pies, string tipo): void {
         if (tipo == "metro"){
             return pies/3.281;
         }else{ //210

@@ -1,0 +1,221 @@
+
+digraph G {
+node[shape="box"];
+start[label="Lista_Instrucciones"];
+
+start -> nodo_2_4;
+nodo_2_4[label="<WHILE>"]
+Expresion_2_4[label="<Expresion>"];
+Istrucciones_2_4[label="<Lista Instrucciones>"];
+nodo_2_4 -> Expresion_2_4;
+nodo_2_11[label="<Valor>\n x"]
+nodo_2_13[label="<Valor>\n 100"]
+nodo_2_12[label=<Instruccion: "MENOR">];
+nodo_2_12 -> nodo_2_11;
+nodo_2_12 -> nodo_2_13;
+
+Expresion_2_4 -> nodo_2_12;
+nodo_2_4 -> Istrucciones_2_4;
+nodo_3_8[label="<Instruccion> IF"];
+nodoIF_3_8[label="< True >"];
+Instrucciones_3_8[label="<Lista Instrucciones>"];
+
+nodo_5_12[label="<Instruccion> \n Asignacion"];
+nombre_5_12[label="<Nombre>\n valor3"];
+nodo_5_12 -> nombre_5_12;
+nodo_5_21[label="<Instruccion>:\n Acceso Vector [Valor][Valor]"];
+id_5_21[label="<Id>:\n vectorDosd"];
+nodo_5_32[label="<Valor>\n 1"];
+nodo_5_35[label="<Valor>\n 1"]
+nodo_5_21 -> id_5_21;
+nodo_5_21 -> nodo_5_32;
+nodo_5_21 -> nodo_5_35;
+
+nodo_5_12 -> nodo_5_21
+
+Instrucciones_3_8 -> nodo_5_12;
+
+nodo_6_12[label="<Instruccion> \n Asignacion"];
+nombre_6_12[label="<Nombre>\n valor3"];
+nodo_6_12 -> nombre_6_12;
+nodo_6_21[label="<Instruccion>:\n Acceso Vector [Valor][Valor]"];
+id_6_21[label="<Id>:\n vectorDosd"];
+nodo_6_32[label="<Instruccion>:\n CASTEO"];
+tipo_6_32[label="<Nuevo Tipo>
+ int"];
+nodo_6_38[label="<Valor>\n 1"]
+nodo_6_32 -> tipo_6_32;
+nodo_6_32 -> nodo_6_38
+;
+nodo_6_43[label="<Valor>\n 1"]
+nodo_6_21 -> id_6_21;
+nodo_6_21 -> nodo_6_32;
+nodo_6_21 -> nodo_6_43;
+
+nodo_6_12 -> nodo_6_21
+
+Instrucciones_3_8 -> nodo_6_12;
+nodoIF_3_8 -> Instrucciones_3_8;
+
+nodo_3_8 -> nodoIF_3_8;
+nodo_8_10[label="<Instruccion>\n ELSE"];
+Instrucciones_8_10[label="<Lista Instrucciones>"];
+
+nodo_9_12[label="<Instruccion> \n Asignacion"];
+nombre_9_12[label="<Nombre>\n valor3"];
+nodo_9_12 -> nombre_9_12;
+nodo_9_21[label="<Instruccion>:\n Acceso Vector [Valor][Valor]"];
+id_9_21[label="<Id>:\n vectorDosd"];
+nodo_9_32[label="<Valor>\n 1"];
+nodo_9_35[label="<Valor>\n 1"]
+nodo_9_21 -> id_9_21;
+nodo_9_21 -> nodo_9_32;
+nodo_9_21 -> nodo_9_35;
+
+nodo_9_12 -> nodo_9_21
+
+Instrucciones_8_10 -> nodo_9_12;
+
+nodo_10_12[label="<Instruccion> \n Asignacion"];
+nombre_10_12[label="<Nombre>\n valor3"];
+nodo_10_12 -> nombre_10_12;
+nodo_10_21[label="<Instruccion>:\n Acceso Vector [Valor][Valor]"];
+id_10_21[label="<Id>:\n vectorDosd"];
+nodo_10_32[label="<Instruccion>:\n CASTEO"];
+tipo_10_32[label="<Nuevo Tipo>
+ int"];
+nodo_10_38[label="<Valor>\n 1"]
+nodo_10_32 -> tipo_10_32;
+nodo_10_32 -> nodo_10_38
+;
+nodo_10_43[label="<Valor>\n 1"]
+nodo_10_21 -> id_10_21;
+nodo_10_21 -> nodo_10_32;
+nodo_10_21 -> nodo_10_43;
+
+nodo_10_12 -> nodo_10_21
+
+Instrucciones_8_10 -> nodo_10_12;
+nodo_11_12[label="<Instruccion>\n PRINT"]
+nodo_11_18[label="<Valor>\n Menor que 100"]
+nodo_11_12 -> nodo_11_18;
+
+Instrucciones_8_10 -> nodo_11_12;
+nodo_8_10 -> Instrucciones_8_10;
+
+nodo_3_8 -> nodo_8_10
+
+Istrucciones_2_4 -> nodo_3_8;
+nodo_14_8[label="<Instruccion>:\n INCREMENTO"]
+nombre_14_8[label="<ID>:\n X"]
+aumento_14_8[label="<Salto>:\n 1"]
+nodo_14_8 -> nombre_14_8;
+nodo_14_8 -> aumento_14_8;
+
+Istrucciones_2_4 -> nodo_14_8;
+nodo_15_8[label="<Instruccion>\n BREAK"];
+
+Istrucciones_2_4 -> nodo_15_8;
+start -> nodo_18_4;
+nodo_18_4[label="<Instruccion> FOR"]
+expresion_18_4[label="<Expresion>"]
+
+nodo_18_10[label="<Instruccion>\n Declaracion"];
+tipo_18_10[label="<Tipo>\n int"];
+nombre_18_10[label="<Nombre>\n i"];
+nodo_18_10 -> tipo_18_10;
+nodo_18_10 -> nombre_18_10;
+nodo_18_16[label="<Valor>\n 0"]
+nodo_18_10 -> nodo_18_16
+
+expresion_18_4 -> nodo_18_10;
+nodo_18_19[label="<Valor>\n i"]
+nodo_18_21[label="<Valor>\n 3"]
+nodo_18_20[label=<Instruccion: "MENOR">];
+nodo_18_20 -> nodo_18_19;
+nodo_18_20 -> nodo_18_21;
+
+expresion_18_4 -> nodo_18_20;
+nodo_18_23[label="<Instruccion>:\n ++"]
+nombre_18_23[label="<ID>:\n i"]
+aumento_18_23[label="<Salto>:\n 1"]
+nodo_18_23 -> nombre_18_23;
+nodo_18_23 -> aumento_18_23;
+
+expresion_18_4 -> nodo_18_23;
+instrucciones_18_4[label="<Lista Instrucciones>"]
+
+nodo_19_8[label="<Instruccion> \n Asignacion"];
+nombre_19_8[label="<Nombre>\n valor3"];
+nodo_19_8 -> nombre_19_8;
+nodo_19_17[label="<Instruccion>:\n Acceso Vector [Valor][Valor]"];
+id_19_17[label="<Id>:\n vectorDosd"];
+nodo_19_28[label="<Valor>\n 1"];
+nodo_19_31[label="<Valor>\n 1"]
+nodo_19_17 -> id_19_17;
+nodo_19_17 -> nodo_19_28;
+nodo_19_17 -> nodo_19_31;
+
+nodo_19_8 -> nodo_19_17
+
+instrucciones_18_4 -> nodo_19_8;
+
+nodo_20_8[label="<Instruccion> \n Asignacion"];
+nombre_20_8[label="<Nombre>\n valor3"];
+nodo_20_8 -> nombre_20_8;
+nodo_20_17[label="<Instruccion>:\n Acceso Vector [Valor][Valor]"];
+id_20_17[label="<Id>:\n vectorDosd"];
+nodo_20_28[label="<Instruccion>:\n CASTEO"];
+tipo_20_28[label="<Nuevo Tipo>
+ int"];
+nodo_20_34[label="<Valor>\n 1"]
+nodo_20_28 -> tipo_20_28;
+nodo_20_28 -> nodo_20_34
+;
+nodo_20_39[label="<Valor>\n 1"]
+nodo_20_17 -> id_20_17;
+nodo_20_17 -> nodo_20_28;
+nodo_20_17 -> nodo_20_39;
+
+nodo_20_8 -> nodo_20_17
+
+instrucciones_18_4 -> nodo_20_8;
+nodo_21_8[label="<Instruccion>\n PRINTLN"]
+nodo_21_16[label="<Valor>\n i="]
+nodo_21_22[label="<Valor>\n i"]
+nodo_21_20[label=<Instruccion: "SUMA">];
+nodo_21_20 -> nodo_21_16;
+nodo_21_20 -> nodo_21_22;
+        
+nodo_21_8 -> nodo_21_20;
+
+instrucciones_18_4 -> nodo_21_8;
+nodo_18_4 -> expresion_18_4;
+nodo_18_4 -> instrucciones_18_4;
+start -> nodo_24_4;
+nodo_24_4[label="<Instruccion>\n METODO"];
+id_24_4[label="<ID>\n funcion2"];
+nodo_24_4 -> id_24_4;
+parametros_24_4[label="<Lista Parametros>"];
+nodo_24_13[label="<Parametro> \nTipo, Id"];
+tipo_24_13[label="string , mensaje"];
+nodo_24_13 -> tipo_24_13;
+
+parametros_24_4 -> nodo_24_13;
+nodo_24_4 -> parametros_24_4;
+instrucciones_24_4[label="<Lista Instrucciones>"];
+nodo_25_8[label="<Instruccion>\n PRINT"]
+nodo_25_14[label="<Valor>\n mensaje"]
+nodo_25_8 -> nodo_25_14;
+
+instrucciones_24_4 -> nodo_25_8;
+nodo_24_4 -> instrucciones_24_4;
+start -> nodo_27_4;
+nodo_27_4[label="<Instruccion>\n RUN"];
+id_27_4[label="<ID>\n funcion2"];
+nodo_27_4 -> id_27_4;
+parametros_27_4[label="<Lista Parametros>"];
+nodo_27_17[label="<Valor>\n hola soy un mensaje"]
+parametros_27_4 -> nodo_27_17;
+nodo_27_4 -> parametros_27_4;
+}
