@@ -1,4 +1,5 @@
 import {Instruccion} from "../../Instrucciones/Instrucciones";
+import { Singleton } from "../../Instrucciones/Singleton";
 
 export class Declaracion extends Instruccion {
     constructor(
@@ -24,5 +25,16 @@ nodo_${this.linea}_${this.columna} -> nombre_${this.linea}_${this.columna};\n`;
             cadena+=`nodo_${this.linea}_${this.columna} -> nodo_${this.data.linea}_${this.data.columna}\n`;   
         }
         return cadena;
+    }
+    public tablaSimbolos() {
+        let s = Singleton.getInstance();
+        let ids = this.nombre.split(',');
+        if (ids.length>0) {
+            ids.forEach(ele =>{
+                s.add_Variable(ele,this.tipo,this.linea,this.columna,{"valor":this.data});
+            })
+        }else{
+            s.add_Variable(this.nombre,this.tipo,this.linea,this.columna,{"valor":this.data});
+        }
     }
 }

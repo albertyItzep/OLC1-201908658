@@ -13,4 +13,6 @@ export class Literal extends Instruccion {
         cadena+=`nodo_${this.linea}_${this.columna}[label="<Valor>\\n ${this.a.toString()}"]`;
         return cadena;
     }
+    public tablaSimbolos() {
+    }
 }

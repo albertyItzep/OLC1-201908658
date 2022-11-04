@@ -20,4 +20,6 @@ nodo_${this.linea}_${this.columna} -> nombre_${this.linea}_${this.columna};\n`;
         cadena+=`nodo_${this.linea}_${this.columna} -> nodo_${this.data.linea}_${this.data.columna}\n`;   
         return cadena;
     }
+    public tablaSimbolos() {
+    }
 }

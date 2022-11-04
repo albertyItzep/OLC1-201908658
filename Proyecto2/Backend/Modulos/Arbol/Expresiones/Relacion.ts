@@ -28,6 +28,8 @@ nodo_${this.linea}_${this.columna} -> nodo_${this.b.linea}_${this.b.columna};\n`
         }
         return cadena;
     }
+    public tablaSimbolos() {
+    }
 }
 
 /*let cadena: string ="";

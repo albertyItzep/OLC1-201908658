@@ -14,6 +14,8 @@ export class Breaks extends Instruccion {
         cadena += `${nodo}[label="<Instruccion>\\n BREAK"];\n`;
         return cadena;
     }
+    public tablaSimbolos() {
+    }
 }
 
 export class ContinueS extends Instruccion {
@@ -22,6 +24,8 @@ export class ContinueS extends Instruccion {
         columna: number,
     ) {
         super(linea,columna);
+    }
+    public tablaSimbolos() {
     }
     
     public ast(): string {
@@ -40,6 +44,8 @@ export class ReturnS extends Instruccion {
     ) {
         super(linea,columna);
     }
+    public tablaSimbolos() {
+    }
     
     public ast(): string {
         let cadena = "";
@@ -51,4 +57,5 @@ export class ReturnS extends Instruccion {
         }
         return cadena;
     }
+    
 }

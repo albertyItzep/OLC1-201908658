@@ -16,4 +16,5 @@ export class ToCharArray extends Instruccion {
         cadena += `${nodo} -> cadena_${this.linea}_${this.columna}`
         return cadena;
     }
+    public tablaSimbolos() {}
 }

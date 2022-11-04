@@ -19,4 +19,5 @@ export class Push extends Instruccion {
         cadena+=`${nodo} -> nodo_${this.expresion.linea}_${this.expresion.columna};\n`;
         return cadena;
     }
+    public tablaSimbolos() {}
 }

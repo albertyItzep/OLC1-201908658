@@ -8,11 +8,12 @@
     const { OperadorTernario } = require('../Arbol/Expresiones/OperadorTernario.ts');
     // sentencias estructurales
     const { Print } = require('../Arbol/Sentencias/Print.ts');
+    const { Bloque } = require('../Arbol/Sentencias/Bloque.ts');
     const { VectorChar } = require('../Arbol/Sentencias/VectorChar.ts');
     const { Funcion } = require('../Arbol/Sentencias/Funcion.ts');
     const { Metodo } = require('../Arbol/Sentencias/Metodo.ts');
     const { Breaks, ContinueS, ReturnS } = require('../Arbol/Sentencias/Breaks.ts');
-    const { WhileS } = require('../Arbol/Sentencias/WhileS.ts');
+    const { WhileS } = require('../Arbol/Sentencias/Whiles.ts');
     const { DoWhile } = require('../Arbol/Sentencias/DoWhile.ts');
     const { DoUntil } = require('../Arbol/Sentencias/DoUntil.ts');
     const { CicloFor } = require('../Arbol/Sentencias/CicloFor.ts');
@@ -27,7 +28,7 @@
     const { Push } = require('../Arbol/Sentencias/Push.ts');
     const { Run } = require('../Arbol/Sentencias/Run.ts');
 
-    const { TypeOf } = require('../Arbol/Sentencias/TypeOf.ts');
+    const { TypeOf } = require('../Arbol/Sentencias/TypeOF.ts');
     const { ToCharArray } = require('../Arbol/Sentencias/ToCharArray.ts');
     const { ToString } = require('../Arbol/Sentencias/ToString.ts');
     
@@ -35,7 +36,7 @@
     const { IncrementoDecremento } = require('../Arbol/Sentencias/IncrementoDecremento.ts');
     const { AccesoVectorX } = require('../Arbol/Sentencias/AccesoVectorX.ts');
     const { AccesoVectorXY } = require('../Arbol/Sentencias/AccesoVectorXY.ts');
-    const { LLamadaFuncion } = require('../Arbol/Sentencias/LLamadaFuncion.ts');
+    const { LLamadaFuncion } = require('../Arbol/Sentencias/LlamadaFuncion.ts');
     const { VectorX , VectorXY } = require('../Arbol/Sentencias/Vector.ts');
     const { ModificarVectorX, ModificarVectorXY } = require('../Arbol/Sentencias/ModificarVectorX.ts');
     const { IfContainer, If, Else, Elif } = require('../Arbol/Sentencias/If.ts');
@@ -45,11 +46,27 @@
     const { Errores } = require('../Instrucciones/Errores.ts');
 
     %}
-%lex
 
+%lex
+%s  string 
 %options case-insensitive
 
 %%
+<INITIAL>["]   {this.begin('string');/*console.log("+entre en el estado string");*/ tmp="";}
+
+<string>[^"\\]      { /*console.log("dentro del estado string: "+yytext);*/  tmp= tmp+yytext;   this.begin('string'); }
+<string>[\\][n]     { tmp= tmp+yytext;   this.begin('string'); }
+<string>[\\][t]     { tmp= tmp+yytext;   this.begin('string'); }
+<string>[\\][r]     { tmp= tmp+yytext;   this.begin('string'); }
+<string>[\\]["]     { tmp= tmp+yytext;   this.begin('string'); }
+<string>[\\][']     { tmp= tmp+yytext;   this.begin('string'); }
+<string>[\\][\\]    { tmp= tmp+yytext;   this.begin('string'); }
+<string>[\"]        {
+                    //console.log("-saliendo del estado string->" +tmp);
+                    this.begin('INITIAL');
+                    yytext= tmp;
+                    return 'cadena'
+                    }
 \s+                                 //Espacios en Blanco
 "//".*                              //Comentario unilineal
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] //Comentario de Varias lineas
@@ -132,13 +149,12 @@
 ([a-zA-Z])[a-zA-Z0-9_]*     return 'id';
 [0-9]+("."[0-9]+)?\b  	    return 'numero';
 [0-9]+\b				    return 'numero';
-\"[^\"]*\"				    { yytext = yytext.substr(1,yyleng-2); return 'cadena'; }
 \'([^\"]|\\[a-zA-Z])?\'     { yytext = yytext.substr(1,yyleng-2); return 'caracter'; }
 
 <<EOF>>                     return 'EOF';
 .                           {
                                 let s = Singleton.getInstance();
-                                s.add_Error(new Errores('Lexico','Caracter Desconocido',yylineno+1,yylloc.first_column+1));
+                                s.add_Error(new Errores('Lexico','Caracter Desconocido: '+yytext,yylineno+1,yylloc.first_column+1));
 }
 
 /lex
@@ -160,6 +176,10 @@
 %%
 INI
     :INSTRUCCIONES EOF { return $1; }
+    |error EOF                  {/*let s = Singleton.getInstance();
+                                s.add_Error(new Errores('Sintactico','Token Inesperado',@1.first_line,@1.first_column));*/
+                                console.log("error sintaxis");
+                                }
 ;
 INSTRUCCIONES
     :INSTRUCCIONES INSTRUCCION { $1.push($2); $$ =$1; }
@@ -192,8 +212,11 @@ INSTRUCCION
     | PUSH                      { $$ = $1; }
     | POP                       { $$ = $1; }
     | RUN                       { $$ = $1; }
-    | error {                   let s = Singleton.getInstance();
-                                s.add_Error(new Errores('Sintactico','Token Inesperado',@1.first_line,@1.first_column)); }
+    | BLOQUE                    { $$ = $1; }
+;
+BLOQUE: 
+      llave_izq INSTRUCCIONES llave_der     { $$ = new Bloque($2, @1.first_line, @1.first_column); }
+    | llave_izq llave_der                   { $$ = new Bloque([], @1.first_line, @1.first_column); }
 ;
 //funciones nativas
 LENGTH
@@ -256,6 +279,9 @@ PRINTLN
 FUNCION
     : id par_izq par_der dos_puntos TIPOVARIABLE llave_izq INSTRUCCIONES llave_der                      { $$ = new Funcion($1,[],$5,$7,@1.first_line,@1.first_column); }
     | id par_izq LISTA_PARAMETROS par_der dos_puntos TIPOVARIABLE llave_izq INSTRUCCIONES llave_der     { $$ = new Funcion($1,$3,$6,$8,@1.first_line,@1.first_column); }
+    // sin instrucciones
+    | id par_izq par_der dos_puntos TIPOVARIABLE llave_izq llave_der                                    { $$ = new Funcion($1,[],$5,[],@1.first_line,@1.first_column); }
+    | id par_izq LISTA_PARAMETROS par_der dos_puntos TIPOVARIABLE llave_izq llave_der                   { $$ = new Funcion($1,$3,$6,[],@1.first_line,@1.first_column); }
 ;
 // Sentencia Metodo
 METODO
@@ -263,6 +289,11 @@ METODO
     | id par_izq LISTA_PARAMETROS par_der dos_puntos void llave_izq INSTRUCCIONES llave_der     { $$ = new Metodo($1,$3,$8,@1.first_line,@1.first_column); }
     | id par_izq par_der llave_izq INSTRUCCIONES llave_der                                      { $$ = new Metodo($1,[],$5,@1.first_line,@1.first_column); }
     | id par_izq LISTA_PARAMETROS par_der llave_izq INSTRUCCIONES llave_der                     { $$ = new Metodo($1,$3,$6,@1.first_line,@1.first_column); }
+    // sin instrucciones
+    | id par_izq par_der dos_puntos void llave_izq  llave_der                                   { $$ = new Metodo($1,[],[],@1.first_line,@1.first_column); }
+    | id par_izq LISTA_PARAMETROS par_der dos_puntos void llave_izq  llave_der                  { $$ = new Metodo($1,$3,[],@1.first_line,@1.first_column); }
+    | id par_izq par_der llave_izq  llave_der                                                   { $$ = new Metodo($1,[],[],@1.first_line,@1.first_column); }
+    | id par_izq LISTA_PARAMETROS par_der llave_izq  llave_der                                  { $$ = new Metodo($1,$3,[],@1.first_line,@1.first_column); }
 ;
 LISTA_PARAMETROS
     : LISTA_PARAMETROS coma PARAMETRO  { $1.push($3); $$ = $1;}
@@ -288,18 +319,23 @@ PARAMETROS_LLAMADA
 FOR
     : for par_izq DECLARACION EXP punto_coma INCREMENTO_DECREMENTO_FOR par_der llave_izq INSTRUCCIONES llave_der    { $$ = new CicloFor($3,$4,$6,$9,@1.first_line,@1.first_column); }
     | for par_izq ASIGNACIONES EXP punto_coma INCREMENTO_DECREMENTO_FOR par_der llave_izq INSTRUCCIONES llave_der   { $$ = new CicloFor($3,$4,$6,$9,@1.first_line,@1.first_column); }
+    | for par_izq DECLARACION EXP punto_coma INCREMENTO_DECREMENTO_FOR par_der llave_izq llave_der    { $$ = new CicloFor($3,$4,$6,[],@1.first_line,@1.first_column); }
+    | for par_izq ASIGNACIONES EXP punto_coma INCREMENTO_DECREMENTO_FOR par_der llave_izq llave_der   { $$ = new CicloFor($3,$4,$6,[],@1.first_line,@1.first_column); }
 ;
 //Sentencia while
 WHILE
     : while par_izq EXP par_der llave_izq INSTRUCCIONES llave_der { $$ = new WhileS($3,$6,@1.first_line,@1.first_column); }
+    | while par_izq EXP par_der llave_izq llave_der               { $$ = new WhileS($3,[],@1.first_line,@1.first_column); }
 ;
 // Sentencia DO WHile
 DOWHILE
     : do llave_izq INSTRUCCIONES llave_der while par_izq EXP par_der punto_coma     { $$ = new DoWhile($3,$7,@1.first_line,@1.first_column); }
+    | do llave_izq llave_der while par_izq EXP par_der punto_coma                   { $$ = new DoWhile([],$6,@1.first_line,@1.first_column); }
 ;
 // sentencia DO UNTIL
 DOUNTIL
     : do llave_izq INSTRUCCIONES llave_der until par_izq EXP par_der punto_coma     { $$ = new DoUntil($3,$7,@1.first_line,@1.first_column); }
+    | do llave_izq llave_der until par_izq EXP par_der punto_coma                   { $$ = new DoUntil([],$6,@1.first_line,@1.first_column); }
 ;
 //sentencia if
 INSTRUCCION_IF
@@ -364,14 +400,20 @@ TIPOVARIABLE
 INCREMENTO_DECREMENTO
     : id incremento punto_coma { $$ = new IncrementoDecremento($1,'INCREMENTO',@1.first_line,@1.first_column);}
     | id decremento punto_coma { $$ = new IncrementoDecremento($1,'DECREMENTO',@1.first_line,@1.first_column);}
+    | incremento id  punto_coma { $$ = new IncrementoDecremento($2,'INCREMENTO',@1.first_line,@1.first_column);}
+    | decremento id  punto_coma { $$ = new IncrementoDecremento($2,'DECREMENTO',@1.first_line,@1.first_column);}
 ;
 INCREMENTO_DECREMENTO_EXP
     : id incremento { $$ = new IncrementoDecremento($1,'INCREMENTO',@1.first_line,@1.first_column);}
     | id decremento { $$ = new IncrementoDecremento($1,'DECREMENTO',@1.first_line,@1.first_column);}
+    | incremento id { $$ = new IncrementoDecremento($2,'INCREMENTO',@1.first_line,@1.first_column);}
+    | decremento id { $$ = new IncrementoDecremento($2,'DECREMENTO',@1.first_line,@1.first_column);}
 ;
 INCREMENTO_DECREMENTO_FOR
     : id incremento             { $$ = new IncrementoDecremento($1,$2,@1.first_line,@1.first_column);}
     | id decremento             { $$ = new IncrementoDecremento($1,$2,@1.first_line,@1.first_column);}
+    | incremento id             { $$ = new IncrementoDecremento($2,'INCREMENTO',@1.first_line,@1.first_column);}
+    | decremento id             { $$ = new IncrementoDecremento($2,'DECREMENTO',@1.first_line,@1.first_column);}
     | id igual EXP              { $$ = new IncrementoDecremento($1,'AUMENTO_DECREMENTO',@1.first_line,@1.first_column , $3);}
 ;
 ID

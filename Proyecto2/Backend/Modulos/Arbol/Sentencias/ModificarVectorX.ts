@@ -10,7 +10,7 @@ export class ModificarVectorX extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {}
     public ast(): string {
         let cadena:string ="";
         cadena += `nodo_${this.linea}_${this.columna}[label="<Instruccion>:\\n Modificar Vector"];\n`;
@@ -39,7 +39,7 @@ export class ModificarVectorXY extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {}
     public ast(): string {
         let cadena:string ="";
         cadena += `nodo_${this.linea}_${this.columna}[label="<Instruccion>:\\n Modificar Vector"];\n`;

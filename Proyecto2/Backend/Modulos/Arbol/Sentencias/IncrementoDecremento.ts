@@ -10,7 +10,7 @@ export class IncrementoDecremento extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {}
     public ast(): string {
         let cadena:string="";
         if (this.salto!= undefined){

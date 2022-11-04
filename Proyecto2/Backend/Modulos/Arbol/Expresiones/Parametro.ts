@@ -17,4 +17,6 @@ export class Parametro extends Instruccion {
         cadena += `${nodo} -> tipo_${this.linea}_${this.columna};\n`;
         return cadena;
     }
+    public tablaSimbolos() {
+    }
 }

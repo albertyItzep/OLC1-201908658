@@ -25,4 +25,11 @@ export class WhileS extends Instruccion{
         }
         return cadena;
     }
+    public tablaSimbolos() {
+        if (this.data.length>0) {
+            for(const intruccion of this.data){
+                intruccion.tablaSimbolos();
+            }
+        }
+    }
 }

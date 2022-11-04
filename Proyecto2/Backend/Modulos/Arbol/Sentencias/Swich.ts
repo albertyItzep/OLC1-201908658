@@ -35,6 +35,16 @@ export class Swith extends Instruccion {
         }
         return cadena;
     }
+    public tablaSimbolos() {
+        if(this.listCase!= null && this.listCase.length>0){
+            for(const instruccion of this.listCase){
+                instruccion.tablaSimbolos()
+            }
+        }
+        if(this.defaults!= null){
+            this.defaults.tablaSimbolos()
+        }
+    }
 }
 
 export class Case extends Instruccion {
@@ -46,7 +56,13 @@ export class Case extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {
+        if(this.data.length>0){
+            for(const instruccion of this.data){
+                instruccion.tablaSimbolos()
+            }
+        }
+    }
     public ast(): string {
         let cadena ="";
         let nodo = `nodo_${this.linea}_${this.columna}`;
@@ -75,7 +91,13 @@ export class Default extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {
+        if(this.data.length>0){
+            for(const instruccion of this.data){
+                instruccion.tablaSimbolos()
+            }
+        }
+    }
     public ast(): string {
         let cadena ="";
         let nodo = `nodo_${this.linea}_${this.columna}`;

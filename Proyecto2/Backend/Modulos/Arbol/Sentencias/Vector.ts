@@ -1,6 +1,18 @@
 import {Instruccion} from "../../Instrucciones/Instrucciones";
+import { Singleton } from "../../Instrucciones/Singleton";
 
 export class VectorX extends Instruccion {
+    public tablaSimbolos() {
+        let s = Singleton.getInstance();
+        let ids = this.nombre.split(',');
+        if (ids.length>0) {
+            ids.forEach(ele =>{
+                s.add_Variable(ele,this.tipo,this.linea,this.columna,{"valor":this.data});
+            })
+        }else{
+            s.add_Variable(this.nombre,this.tipo,this.linea,this.columna,{"valor":this.data});
+        }
+    }
     constructor(
         private tipo: string,
         private nombre: string,
@@ -43,6 +55,17 @@ export class VectorX extends Instruccion {
 }
 
 export class VectorXY extends Instruccion {
+    public tablaSimbolos() {
+        let s = Singleton.getInstance();
+        let ids = this.nombre.split(',');
+        if (ids.length>0) {
+            ids.forEach(ele =>{
+                s.add_Variable(ele,this.tipo,this.linea,this.columna,{"valor1":this.data1,"valor2":this.data2});
+            })
+        }else{
+            s.add_Variable(this.nombre,this.tipo,this.linea,this.columna,{"valor1":this.data1,"valor2":this.data2});
+        }
+    }
     constructor(
         private tipo: string,
         private nombre: string,
@@ -92,7 +115,7 @@ export class VectorXY extends Instruccion {
             cadena+=`instancia_${this.linea}_${this.columna} -> nodo_${this.size1?.linea}_${this.size1?.columna}\n`;
             cadena+=`instancia_${this.linea}_${this.columna} -> nodo_${this.size2?.linea}_${this.size2?.columna}\n`;
         }
-
+        
         return cadena;
     }
 }

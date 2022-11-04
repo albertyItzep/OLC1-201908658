@@ -4,4 +4,5 @@ export abstract class Instruccion {
         this.columna = columna;
     }
     public abstract ast():string;
+    public abstract tablaSimbolos():any;
 }

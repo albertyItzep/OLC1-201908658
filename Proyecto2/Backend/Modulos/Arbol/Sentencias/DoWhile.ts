@@ -9,6 +9,14 @@ export class DoWhile extends Instruccion{
     ) {
         super(linea,columna);
     }
+    public tablaSimbolos() {
+        if (this.data.length>0) {
+            for(const intruccion of this.data){
+                intruccion.tablaSimbolos();
+            }
+        }
+    }
+
     public ast(): string {
         let cadena = "";
         let nodo = `nodo_${this.linea}_${this.columna}`;

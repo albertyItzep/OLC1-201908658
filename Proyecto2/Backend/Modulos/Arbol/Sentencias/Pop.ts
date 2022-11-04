@@ -16,4 +16,5 @@ export class Pop extends Instruccion {
         cadena+=`${nodo} -> id_${this.linea}_${this.columna};\n`;
         return cadena;
     }
+    public tablaSimbolos() {}
 }

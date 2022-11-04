@@ -16,4 +16,5 @@ export class Print extends Instruccion {
         cadena += `${nodo} -> nodo_${this.a.linea}_${this.a.columna};\n`;
         return cadena;
     }
+    public tablaSimbolos() {}
 }

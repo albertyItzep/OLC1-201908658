@@ -1,6 +1,16 @@
 import {Instruccion} from "../../Instrucciones/Instrucciones";
+import { Singleton } from "../../Instrucciones/Singleton";
 
 export class Metodo extends Instruccion {
+    public tablaSimbolos() {
+        let s = Singleton.getInstance();
+        s.add_Funcion(this.id,"void",this.linea,this.columna,{"parametros":this.parametros,"Instrucciones":this.instrucciones});
+        if(this.instrucciones.length>0){
+            for(const instruccion of this.instrucciones){
+                instruccion.tablaSimbolos();                
+            }
+        }
+    }
     constructor(
         private id: string,
         private parametros: Instruccion[],
@@ -30,7 +40,7 @@ export class Metodo extends Instruccion {
                 cadena += `instrucciones_${this.linea}_${this.columna} -> nodo_${element.linea}_${element.columna};\n`;
             }
         cadena+=`${nodo} -> instrucciones_${this.linea}_${this.columna};\n`;
-        
         return cadena;
     }
+    
 }

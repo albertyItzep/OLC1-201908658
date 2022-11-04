@@ -19,4 +19,6 @@ nodo_${this.linea}_${this.columna} -> nodo_${this.b.linea}_${this.b.columna};
 `;
         return cadena;
     }
+    public tablaSimbolos() {
+    }
 }

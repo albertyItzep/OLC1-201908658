@@ -25,4 +25,5 @@ export class Run extends Instruccion {
         }
         return cadena;
     }
+    public tablaSimbolos() {}
 }

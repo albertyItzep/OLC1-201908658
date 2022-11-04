@@ -23,4 +23,5 @@ export class VectorChar extends Instruccion {
         cadena+=`nodo_${this.linea}_${this.columna} -> nodo_${this.expresion.linea}_${this.expresion.columna};\n`;
         return cadena;
     }
+    public tablaSimbolos() {}
 }

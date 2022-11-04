@@ -16,4 +16,5 @@ export class ToUpper extends Instruccion {
         cadena += `${nodo} -> nodo_${this.expreion.linea}_${this.expreion.columna};\n`;
         return cadena;
     }
+    public tablaSimbolos() {}
 }

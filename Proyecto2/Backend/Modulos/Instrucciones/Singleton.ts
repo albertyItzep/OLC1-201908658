@@ -1,8 +1,10 @@
+import { env } from './env';
 import {Errores} from './Errores';
 export class Singleton {
     private static instance: Singleton;
     private error: Errores[]=[];
     private AST: string="";
+    private enviroment = new env(null);
 
     private constructor(){};
 
@@ -29,5 +31,22 @@ export class Singleton {
     public get_AST():string{
         return this.AST;
     }
-
+    public clear_AST():void{
+        this.AST = ""
+    }
+    public clear_Errors(){
+        this.error=[]
+    }
+    public clear_Enviroment(){
+        this.enviroment = new env(null);
+    }
+    public add_Variable(id: string,tipo: string,linea:number,columna:number,valor:{}):any{
+        this.enviroment.guardar_Variable(id,tipo,linea,columna,valor);
+    }
+    public add_Funcion(id: string,tipo: string,linea:number,columna:number,valor:{}):any{
+        this.enviroment.guardar_funcion(id,tipo,linea,columna,valor);
+    }
+    public get_Env(){
+        return this.enviroment;
+    }
 }

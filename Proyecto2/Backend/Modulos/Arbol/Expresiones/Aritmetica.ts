@@ -1,6 +1,8 @@
 import {Instruccion} from "../../Instrucciones/Instrucciones";
 
 export class Aritmericas extends Instruccion {
+    public tablaSimbolos() {
+    }
     constructor(
         private a: Instruccion,
         private b: Instruccion,

@@ -19,4 +19,6 @@ export class AccesoVectorX extends Instruccion {
         cadena += `nodo_${this.linea}_${this.columna} -> nodo_${this.data.linea}_${this.data.columna};\n`
         return cadena;
     }
+    public tablaSimbolos() {
+    }
 }

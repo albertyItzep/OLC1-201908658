@@ -10,7 +10,17 @@ export class IfContainer extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {
+        this.ifI.tablaSimbolos()
+        if (this.Elif!=null && this.Elif.length>0) {
+            for(const intruccion of this.Elif){
+                intruccion.tablaSimbolos();
+            }
+        }
+        if (this.ElseI!=null) {
+            this.ElseI.tablaSimbolos();
+        }
+    }
     public ast(): string {
         let cadena:string="";
         cadena+=`nodo_${this.linea}_${this.columna}[label="<Instruccion> IF"];\n`;
@@ -39,7 +49,13 @@ export class If extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {
+        if (this.instrucciones.length>0) {
+            for(const intruccion of this.instrucciones){
+                intruccion.tablaSimbolos();
+            }
+        }
+    }
     public ast(): string {
         let cadena:string = "";
         cadena+=`nodoIF_${this.linea}_${this.columna}[label="< True >"];\n`;
@@ -61,7 +77,13 @@ export class Else extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {
+        if (this.instrucciones.length>0) {
+            for(const intruccion of this.instrucciones){
+                intruccion.tablaSimbolos();
+            }
+        }
+    }
     public ast(): string {
         let cadena:string = "";
         cadena+=`nodo_${this.linea}_${this.columna}[label="<Instruccion>\\n ELSE"];\n`;
@@ -84,7 +106,13 @@ export class Elif extends Instruccion {
     ) {
         super(linea,columna);
     }
-    
+    public tablaSimbolos() {
+        if (this.instrucciones.length>0) {
+            for(const intruccion of this.instrucciones){
+                intruccion.tablaSimbolos();
+            }
+        }
+    }
     public ast(): string {
         let cadena:string = "";
         cadena+=`nodo_${this.linea}_${this.columna}[label="<Instruccion>\\n ELIF TRUE"];\n`;

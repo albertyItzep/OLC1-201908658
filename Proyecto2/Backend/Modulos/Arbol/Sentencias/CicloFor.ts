@@ -37,4 +37,11 @@ export class CicloFor extends Instruccion{
         cadena += `${nodo} -> instrucciones_${this.linea}_${this.columna};\n`;
         return cadena;
     }
+    public tablaSimbolos() {
+        if (this.data.length>0) {
+            for(const intruccion of this.data){
+                intruccion.tablaSimbolos();
+            }
+        }
+    }
 }

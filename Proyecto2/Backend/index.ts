@@ -4,30 +4,35 @@ import { Instruccion } from './Modulos/Instrucciones/Instrucciones';
 import { Singleton } from './Modulos/Instrucciones/Singleton';
 
 import { exec } from "child_process";
+const cors = require('cors');
 const fs = require('fs');
 const morgan = require('morgan');
 const parse = require('./Modulos/Analizador/Gramatica');
 
+const s = Singleton.getInstance();
 let errores: Errores[] = [];
-let AST:Instruccion[] = []
+let AST:Instruccion[] = [];
 const app = express();
 
-const s = Singleton.getInstance();
 app.use(morgan('tiny'));
-
-app.get('/getParse',(req,res)=>{
-    AST = parse.parse(`
-    funcion2(string mensaje):void{
-        Print(mensaje);
+app.use(cors())
+app.use(express.json())
+app.post('/getParse',(req,res)=>{
+    let body_req = req.body.data
+    try {
+        s.clear_Errors();
+        s.clear_Enviroment();
+        s.clear_AST();
+        AST = parse.parse(body_req);
+        res.json({errors:s.get_Errors()});
+    } catch (error) {
+        res.send('<h1>Internal Error</h1>');
     }
-    //https://bmoisesg.github.io/AST/code.html
-    Run funcion2("hola soy un mensaje")
-    `);
-    res.send('<h1>Server on</h1>');
 });
 
-app.get('/getAST',(req,res)=>{
+app.get('/getAST',async(req,res)=>{
     if(AST.length>0){
+        s.clear_AST();
         s.add_AST(`
 digraph G {
 node[shape="box"];
@@ -38,23 +43,39 @@ start[label="Lista_Instrucciones"];\n
             s.add_AST(instruccion.ast());
         }
         s.add_AST('}');
-        createFile('ast.dot',s.get_AST());
-        exec('dot -Tpng ast.dot -o ast.png');
-        res.json({"status":"Ok"});
-
+        res.json({"status":"Ok","data":s.get_AST()});
     }else{
-        res.json({"status":"Error"});
+        s.clear_AST();
+        s.add_AST(`
+        digraph G {
+        node[shape="box"];
+        start[label="Sin Instrucciones"];\n
+        `);
+        s.add_AST('}');
+        res.json({"status":"Error",data:s.get_AST()});
     }
 });
 app.get('/getErrores',(req,res)=>{
-    res.json({"errors":errores})
+    errores = s.get_Errors();
+    console.log(s.get_Errors());
+    res.json({"errors":errores});
 });
-app.listen(3000,()=>{
+app.get('/getSymbol',(req,res)=>{
+    if (AST.length>0) {
+        for (const instruccion of AST) {
+            instruccion.tablaSimbolos();
+        }
+        let re = s.get_Env()
+        let con=(re["Enviroment"]);
+        let prueba:any=[]
+        for(const [key, value] of con){
+            prueba.push(value);
+        }
+        res.json({prueba})
+    }else{
+        res.json({AST})
+    }
+})
+app.listen(8000,()=>{
     console.log('server on');
 });
-
-function createFile(nameFile: string, data: string){
-    fs.writeFile(nameFile, data, () => {
-        console.log('>> The file ' + nameFile + ' has been saved!');
-    })
-}

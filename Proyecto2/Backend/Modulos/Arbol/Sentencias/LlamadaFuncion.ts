@@ -9,6 +9,7 @@ export class LLamadaFuncion extends Instruccion {
     ){
         super(linea,columna)
     }
+    public tablaSimbolos() {}
     public ast(): string {
         let cadena = ""
         let nodo = `nodo_${this.linea}_${this.columna}`;
