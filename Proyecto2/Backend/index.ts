@@ -43,7 +43,9 @@ start[label="Lista_Instrucciones"];\n
             s.add_AST(instruccion.ast());
         }
         s.add_AST('}');
-        res.json({"status":"Ok","data":s.get_AST()});
+        createFile('../Frontend/mfmscript/src/assets/ast.dot',s.get_AST());
+        exec('dot -Tpng ../Frontend/mfmscript/src/assets/ast.dot -o ../Frontend/mfmscript/src/assets/ast.png');
+        res.json({"status":"Ok"});
     }else{
         s.clear_AST();
         s.add_AST(`
@@ -52,7 +54,9 @@ start[label="Lista_Instrucciones"];\n
         start[label="Sin Instrucciones"];\n
         `);
         s.add_AST('}');
-        res.json({"status":"Error",data:s.get_AST()});
+        createFile('../Frontend/mfmscript/src/assets/ast.dot',s.get_AST());
+        exec('dot -Tpng ../Frontend/mfmscript/src/assets/ast.dot -o ../Frontend/mfmscript/src/assets/ast.png');
+        res.json({"status":"Error"});
     }
 });
 app.get('/getErrores',(req,res)=>{
@@ -79,3 +83,8 @@ app.get('/getSymbol',(req,res)=>{
 app.listen(8000,()=>{
     console.log('server on');
 });
+function createFile(nameFile: string, data: string){
+    fs.writeFile(nameFile, data, () => {
+        console.log('>> The file ' + nameFile + ' has been saved!');
+    })
+};

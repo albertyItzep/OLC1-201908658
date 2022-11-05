@@ -49,6 +49,7 @@
 
 %lex
 %s  string 
+%s  caracter
 %options case-insensitive
 
 %%
@@ -67,6 +68,21 @@
                     yytext= tmp;
                     return 'cadena'
                     }
+<INITIAL>['] { this.begin('caracter'); tmp2 = ""; }
+<caracter>[^'\\]      { /*console.log("dentro del estado string: "+yytext);*/  tmp2= tmp2+yytext;   this.begin('caracter'); }
+<caracter>[\\][n]     { tmp2= tmp2+yytext;   this.begin('caracter'); }
+<caracter>[\\][t]     { tmp2= tmp2+yytext;   this.begin('caracter'); }
+<caracter>[\\][r]     { tmp2= tmp2+yytext;   this.begin('caracter'); }
+<caracter>[\\][']     { tmp2= tmp2+yytext;   this.begin('caracter'); }
+<caracter>[\\]["]     { tmp2= tmp2+yytext;   this.begin('caracter'); }
+<caracter>[\\][\\]    { tmp2= tmp2+yytext;   this.begin('caracter'); }
+<caracter>[\']        {
+                    //console.log("-saliendo del estado string->" +tmp);
+                    this.begin('INITIAL');
+                    yytext= tmp2;
+                    return 'caracter'
+                    }
+//caracter                    
 \s+                                 //Espacios en Blanco
 "//".*                              //Comentario unilineal
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] //Comentario de Varias lineas
@@ -149,7 +165,6 @@
 ([a-zA-Z])[a-zA-Z0-9_]*     return 'id';
 [0-9]+("."[0-9]+)?\b  	    return 'numero';
 [0-9]+\b				    return 'numero';
-\'([^\"]|\\[a-zA-Z])?\'     { yytext = yytext.substr(1,yyleng-2); return 'caracter'; }
 
 <<EOF>>                     return 'EOF';
 .                           {
