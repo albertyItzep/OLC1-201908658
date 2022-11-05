@@ -2,6 +2,7 @@
 import AST from "./Ast";
 import Errores  from "./Errors";
 import Symbols from "./Symbols";
+import Manuales from "./Manuales";
 function NavBar() {
     return(
         <div>
@@ -16,6 +17,7 @@ function NavBar() {
                             <AST/>
                             <Symbols/>
                             <Errores/>
+                            <Manuales/>
                         </ul>
                     </div>
                 </div>
