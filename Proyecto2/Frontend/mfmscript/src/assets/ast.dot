@@ -4,12 +4,7 @@ node[shape="box"];
 start[label="Lista_Instrucciones"];
 
 start -> nodo_1_0;
-
-nodo_1_0[label="<Instruccion>\n Declaracion"];
-tipo_1_0[label="<Tipo>\n string"];
-nombre_1_0[label="<Nombre>\n hola"];
-nodo_1_0 -> tipo_1_0;
-nodo_1_0 -> nombre_1_0;
-nodo_1_15[label="<Valor>\n "]
-nodo_1_0 -> nodo_1_15
+nodo_1_0[label="<Instruccion>\n PRINT"]
+nodo_1_9[label="<Valor>\n \'"]
+nodo_1_0 -> nodo_1_9;
 }
